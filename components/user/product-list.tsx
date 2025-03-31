@@ -1,0 +1,102 @@
+"use client";
+
+import React from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { FreeMode, Navigation, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import Image from "next/image";
+
+interface Product {
+  id: number;
+  name: string;
+  price: string;
+  category: string;
+}
+
+interface ProductListProps {
+  title: string;
+  products: Product[];
+  showAllButton?: boolean;
+}
+
+const ProductList: React.FC<ProductListProps> = ({
+  title,
+  products,
+  showAllButton = true,
+}) => {
+  return (
+    <div className="container mx-auto p-4 sm:p-6 my-6 sm:my-8 bg-gray-50">
+      <div className="flex justify-between items-center mb-4 sm:mb-6">
+        {/* Responsive title text */}
+        <h2 className="text-lg sm:text-xl md:text-2xl font-bold">{title}</h2>
+        {showAllButton && (
+          <button className="text-primary hover:underline text-sm sm:text-base">
+            Show all
+          </button>
+        )}
+      </div>
+
+      {/* Swiper for mobile AND tablets (up to lg breakpoint) */}
+      <div className="xl:hidden">
+        <Swiper
+          spaceBetween={16}
+          slidesPerView={"auto"}
+          centeredSlides={false}
+          freeMode={true}
+          modules={[FreeMode]}
+          className="px-2 pb-10"
+        >
+          {products.map((product) => (
+            <SwiperSlide key={product.id} className="!w-[180px] sm:!w-[200px]">
+              <div className="border rounded-lg p-3 sm:p-4 hover:shadow-lg transition-shadow cursor-pointer h-full">
+                {/* <div className="h-32 sm:h-40 bg-gray-100 mb-2 sm:mb-3 rounded"></div> */}
+                <Image
+                  src={"/images/hero/women-fashion.jpeg"}
+                  alt={product.name}
+                  className="h-32 sm:h-40 w-full object-cover rounded mb-2 sm:mb-3"
+                  width={100}
+                  height={100}
+                />
+                <h3 className="font-medium text-sm sm:text-base truncate flex-grow">
+                  {product.name}
+                </h3>
+                <p className="text-xs sm:text-sm text-gray-500">
+                  {product.category}
+                </p>
+                <p className="text-gray-600 font-semibold text-sm sm:text-base">
+                  {product.price}
+                </p>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
+
+      {/* Desktop Grid (lg breakpoint and above) */}
+      <div className="hidden xl:grid grid-cols-3 xl:grid-cols-5 gap-4 md:gap-6">
+        {products.map((product) => (
+          <div
+            key={product.id}
+            className="border rounded-lg p-4 hover:shadow-lg transition-shadow cursor-pointer"
+          >
+            {/* <div className="h-40 bg-gray-100 mb-3 rounded"></div> */}
+            <Image
+              src={"/images/hero/women-fashion.jpeg"}
+              alt={product.name}
+              className="h-32 sm:h-40 w-full object-cover rounded mb-2 sm:mb-3"
+              width={100}
+              height={100}
+            />
+            <h3 className="font-medium truncate flex-grow">{product.name}</h3>
+            <p className="text-sm text-gray-500">{product.category}</p>
+            <p className="text-gray-600 font-semibold">{product.price}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default ProductList;
