@@ -16,31 +16,33 @@ export default async function DashboardLayout({
 }) {
   // Get user data from cookies (server-side)
   const cookieStore = await cookies();
-  const userData = JSON.parse(cookieStore.get("userData")?.value!);
+  const userData = JSON.parse(cookieStore.get("userData")?.value || "{}");
 
   return (
-    <SidebarProvider>
-      <div className="flex h-screen w-full">
-        {/* Sidebar */}
-        <AdminSidebar userData={userData} />
+    <div>
+      <SidebarProvider>
+        <div className="flex h-screen w-full">
+          {/* Sidebar */}
+          <AdminSidebar userData={userData} />
 
-        {/* Main Content */}
-        <main className="flex-1 w-full px-4 py-4">
-          <div className="flex items-center gap-2 px-2">
-            {/* Sidebar Trigger */}
-            <SidebarTrigger className="-ml-1" />
-            <Separator orientation="vertical" className="mr-2 h-4" />
-            {/* Breadcrumb */}
-            <BreadcrumbWithCustomSeparator />
+          {/* Main Content */}
+          <div className="flex-1 w-full px-4 py-4">
+            <div className="flex items-center gap-2 px-2">
+              {/* Sidebar Trigger */}
+              <SidebarTrigger className="-ml-1" />
+              <Separator orientation="vertical" className="mr-2 h-4" />
+              {/* Breadcrumb */}
+              <BreadcrumbWithCustomSeparator />
+            </div>
+
+            {/* Separator between breadcrumb and main content */}
+            <Separator className="px-2 my-4" />
+
+            {/* Page Content */}
+            <section className="flex-1 px-2 overflow-auto">{children}</section>
           </div>
-
-          {/* Separator between breadcrumb and main content */}
-          <Separator className="px-2 my-4" />
-
-          {/* Page Content */}
-          <section className="flex-1 px-2 overflow-auto">{children}</section>
-        </main>
-      </div>
-    </SidebarProvider>
+        </div>
+      </SidebarProvider>
+    </div>
   );
 }

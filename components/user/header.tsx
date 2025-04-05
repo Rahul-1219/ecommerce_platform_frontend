@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 import { Input } from "../ui/input";
 import { Menu, X } from "lucide-react";
+import Link from "next/link";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,7 +15,7 @@ export function Header() {
       <div className="flex items-center gap-4">
         {/* Logo */}
         <Button className="text-xl font-bold outline-none" variant="ghost">
-          MyStore
+          <Link href="/">MyStore</Link>
         </Button>
 
         {/* Navigation Links (Visible on Medium Screens and Above) */}
