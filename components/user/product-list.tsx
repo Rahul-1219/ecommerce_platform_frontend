@@ -8,6 +8,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import Image from "next/image";
 import Link from "next/link";
+import ProductCard from "./product-card";
 
 interface Product {
   id: number;
@@ -52,25 +53,17 @@ const ProductList: React.FC<ProductListProps> = ({
           {products.map((product) => (
             <SwiperSlide key={product.id} className="!w-[180px] sm:!w-[200px]">
               <Link href="/product">
-                <div className="border rounded-lg p-3 sm:p-4 hover:shadow-lg transition-shadow cursor-pointer h-full">
-                  {/* <div className="h-32 sm:h-40 bg-gray-100 mb-2 sm:mb-3 rounded"></div> */}
-                  <Image
-                    src={"/images/hero/women-fashion.jpeg"}
-                    alt={product.name}
-                    className="h-32 sm:h-40 w-full object-cover rounded mb-2 sm:mb-3"
-                    width={100}
-                    height={100}
-                  />
-                  <h3 className="font-medium text-sm sm:text-base truncate flex-grow">
-                    {product.name}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-gray-500">
-                    {product.category}
-                  </p>
-                  <p className="text-gray-600 font-semibold text-sm sm:text-base">
-                    {product.price}
-                  </p>
-                </div>
+                <ProductCard
+                  id={product.id}
+                  name={product.name}
+                  title={product.name}
+                  brand="Nike"
+                  price={product.price}
+                  originalPrice={product.price}
+                  discount={10}
+                  category={product.category}
+                  imageUrl="/images/hero/women-fashion.jpeg"
+                />
               </Link>
             </SwiperSlide>
           ))}
@@ -81,19 +74,17 @@ const ProductList: React.FC<ProductListProps> = ({
       <div className="hidden xl:grid grid-cols-3 xl:grid-cols-5 gap-4 md:gap-6">
         {products.map((product) => (
           <Link href="/product" key={product.id}>
-            <div className="border rounded-lg p-4 hover:shadow-lg transition-shadow cursor-pointer">
-              {/* <div className="h-40 bg-gray-100 mb-3 rounded"></div> */}
-              <Image
-                src={"/images/hero/women-fashion.jpeg"}
-                alt={product.name}
-                className="h-32 sm:h-40 w-full object-cover rounded mb-2 sm:mb-3"
-                width={100}
-                height={100}
-              />
-              <h3 className="font-medium truncate flex-grow">{product.name}</h3>
-              <p className="text-sm text-gray-500">{product.category}</p>
-              <p className="text-gray-600 font-semibold">{product.price}</p>
-            </div>
+            <ProductCard
+              id={product.id}
+              name={product.name}
+              title={product.name}
+              brand="Nike"
+              price={product.price}
+              originalPrice={product.price}
+              discount={10}
+              category={product.category}
+              imageUrl="/images/hero/women-fashion.jpeg"
+            />
           </Link>
         ))}
       </div>
