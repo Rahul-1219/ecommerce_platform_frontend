@@ -1,13 +1,14 @@
 "use client";
-import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "../ui/button";
-import { useState } from "react";
-import { Input } from "../ui/input";
-import { Menu, X } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { CircleUserRound, Menu, X } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // This would come from your auth state
 
   return (
     <header className="flex justify-between items-center p-4">
@@ -35,8 +36,15 @@ export function Header() {
           className="hidden sm:block w-48 md:w-64"
         />
 
-        {/* Login and Cart Buttons */}
-        <Button variant="ghost">Login</Button>
+        {/* Conditional rendering based on login status */}
+        {isLoggedIn ? (
+          <Link href="/profile">
+            <CircleUserRound className="h-5 w-5" />
+          </Link>
+        ) : (
+          <Button variant="ghost">Login</Button>
+        )}
+
         <Button variant="ghost">Cart</Button>
 
         {/* Mobile Menu Button (Visible on Small Screens) */}
@@ -73,6 +81,12 @@ export function Header() {
               <Button variant="ghost" className="w-full justify-start">
                 Kids
               </Button>
+              {/* Add mobile login button if not logged in */}
+              {!isLoggedIn && (
+                <Button variant="ghost" className="w-full justify-start">
+                  Login
+                </Button>
+              )}
             </div>
           </motion.div>
         )}
