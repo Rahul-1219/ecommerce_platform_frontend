@@ -62,25 +62,11 @@ export default function ProductListingPage() {
     { name: "Greyloong2", count: 2018 },
     { name: "Roadster3", count: 1950 },
     { name: "Greyloong4", count: 2018 },
-    { name: "Roadster5", count: 1950 },
-    { name: "Greyloong6", count: 2018 },
-    { name: "Roadster7", count: 1950 },
-    { name: "Greyloong8", count: 2018 },
-    { name: "Roadster9", count: 1950 },
-    { name: "Greyloong0", count: 2018 },
   ];
 
   const categories = [
     { name: "T-shirts", count: 193377 },
-    { name: "Loange T-shirts", count: 1237 },
-    { name: "T-shirts1", count: 193377 },
-    { name: "Loange T-shirts2", count: 1237 },
-    { name: "T-shirts2", count: 193377 },
-    { name: "Loange T-shirts4", count: 1237 },
-    { name: "T-shirts3", count: 193377 },
-    { name: "Loange T-shirts1", count: 1237 },
-    { name: "T-shirts4", count: 193377 },
-    { name: "Loange T-shirts8", count: 1237 },
+    { name: "Lounge T-shirts", count: 1237 },
   ];
 
   const products = [
@@ -90,14 +76,20 @@ export default function ProductListingPage() {
       price: 721,
       originalPrice: 1899,
       discount: 62,
+      id: 1,
+      category: "T-shirts",
+      imageUrl: "/images/hero/women-fashion.jpeg",
     },
-    ...Array(20).fill({
+    ...Array.from({ length: 20 }, (_, i) => ({
+      id: i + 2,
       brand: "Sample Brand",
       name: "Sample Product Title",
       price: 999,
       originalPrice: 1999,
       discount: 50,
-    }),
+      category: "T-shirts",
+      imageUrl: "/images/hero/women-fashion.jpeg",
+    })),
   ];
 
   const onSubmit = (data: FilterValues) => {
@@ -156,6 +148,7 @@ export default function ProductListingPage() {
           type="multiple"
           defaultValue={["categories", "brand", "price"]}
         >
+          {/* Categories */}
           <AccordionItem value="categories">
             <AccordionTrigger className="font-semibold">
               CATEGORIES
@@ -176,7 +169,7 @@ export default function ProductListingPage() {
                               ? field.onChange([...field.value, category.name])
                               : field.onChange(
                                   field.value?.filter(
-                                    (value) => value !== category.name
+                                    (v) => v !== category.name
                                   )
                                 );
                           }}
@@ -195,6 +188,7 @@ export default function ProductListingPage() {
             </AccordionContent>
           </AccordionItem>
 
+          {/* Brands */}
           <AccordionItem value="brand">
             <AccordionTrigger className="font-semibold">BRAND</AccordionTrigger>
             <AccordionContent className="space-y-2 mt-2">
@@ -212,9 +206,7 @@ export default function ProductListingPage() {
                             checked
                               ? field.onChange([...field.value, brand.name])
                               : field.onChange(
-                                  field.value?.filter(
-                                    (value) => value !== brand.name
-                                  )
+                                  field.value?.filter((v) => v !== brand.name)
                                 );
                           }}
                         />
@@ -227,12 +219,13 @@ export default function ProductListingPage() {
                   )}
                 />
               ))}
-              <button className="text-blue-500 text-sm mt-2">
-                + 1119 more
+              <button type="button" className="text-blue-500 text-sm mt-2">
+                + More
               </button>
             </AccordionContent>
           </AccordionItem>
 
+          {/* Price Range */}
           <AccordionItem value="price">
             <AccordionTrigger className="font-semibold">PRICE</AccordionTrigger>
             <AccordionContent className="space-y-4 mt-4">
@@ -257,7 +250,6 @@ export default function ProductListingPage() {
                           className="w-full"
                         />
                       </FormControl>
-
                       <div className="flex justify-between mt-2 text-sm font-medium">
                         <span>₹{sliderValue[0].toLocaleString()}</span>
                         <span>
@@ -273,17 +265,16 @@ export default function ProductListingPage() {
             </AccordionContent>
           </AccordionItem>
         </Accordion>
-
-        <div className="md:hidden space-y-2">
+        <div className="md:hidden flex gap-3">
           <Button
             type="button"
             variant="outline"
-            className="w-full"
+            className="flex-1"
             onClick={onReset}
           >
             Reset
           </Button>
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="flex-1">
             Apply
           </Button>
         </div>
@@ -329,20 +320,12 @@ export default function ProductListingPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row gap-8">
-        {/* Filter Sidebar - Sticky with independent scrolling */}
         <div className="hidden md:block w-1/4">
           <div className="sticky top-4 h-[calc(100vh-2rem)] overflow-y-auto pr-2">
-            <div className="filter-scrollbar">
-              <h1 className="text-2xl font-bold mb-6">
-                Men T-Shirts{" "}
-                <span className="text-gray-500 text-lg">- 193747 items</span>
-              </h1>
-              <FilterSidebar />
-            </div>
+            <FilterSidebar />
           </div>
         </div>
 
-        {/* Products Section - Independent scrolling */}
         <div className="w-full md:w-3/4">
           <div className="flex justify-between items-center mb-6">
             <div className="text-sm text-gray-500">
@@ -378,30 +361,18 @@ export default function ProductListingPage() {
             </Form>
           </div>
 
-          {/* Products Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {products.map((product, index) => (
-              <ProductCard
-                key={index}
-                id={product.id}
-                name={product.name}
-                title={product.name}
-                brand={product.brand}
-                price={product.price}
-                originalPrice={product.originalPrice}
-                discount={product.discount}
-                category={product.category}
-                imageUrl={product.imageUrl}
-              />
+              <ProductCard key={index} {...product} />
             ))}
           </div>
         </div>
       </div>
 
-      {/* Mobile buttons */}
+      {/* Mobile Buttons */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg p-3 flex gap-3 z-10">
         <Button
-          variant="outline"
+          variant="secondary"
           className="flex-1"
           onClick={() => setMobileSortOpen(true)}
         >
@@ -409,7 +380,7 @@ export default function ProductListingPage() {
           SORT
         </Button>
         <Button
-          variant="outline"
+          variant="secondary"
           className="flex-1"
           onClick={() => setMobileFilterOpen(true)}
         >
@@ -432,7 +403,7 @@ export default function ProductListingPage() {
 
       {/* Mobile Sort Drawer */}
       <Drawer open={mobileSortOpen} onOpenChange={setMobileSortOpen}>
-        <DrawerContent className="max-h-[70vh]">
+        <DrawerContent className="max-h-[60vh]">
           <DrawerHeader className="border-b">
             <DrawerTitle>Sort By</DrawerTitle>
           </DrawerHeader>
