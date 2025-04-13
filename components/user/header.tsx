@@ -1,10 +1,11 @@
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
-import { CircleUserRound, Menu, X } from "lucide-react";
+import { CircleUserRound, Menu, ShoppingCart, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import { CartIcon } from "./cart/cart-icon";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -44,8 +45,7 @@ export function Header() {
         ) : (
           <Button variant="ghost">Login</Button>
         )}
-
-        <Button variant="ghost">Cart</Button>
+        <CartIcon count={1} />
 
         {/* Mobile Menu Button (Visible on Small Screens) */}
         <Button
@@ -81,12 +81,6 @@ export function Header() {
               <Button variant="ghost" className="w-full justify-start">
                 Kids
               </Button>
-              {/* Add mobile login button if not logged in */}
-              {!isLoggedIn && (
-                <Button variant="ghost" className="w-full justify-start">
-                  Login
-                </Button>
-              )}
             </div>
           </motion.div>
         )}
