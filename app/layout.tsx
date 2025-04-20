@@ -26,11 +26,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen w-full`}
       >
         {/* <ThemeProvider attribute="class" defaultTheme="system" enableSystem> */}
-        <main className="flex-grow container">{children}</main>
+        <main className="flex-grow w-full max-w-[100vw] overflow-x-hidden">
+          {children}
+        </main>
         <Toaster />
         {/* </ThemeProvider> */}
       </body>
