@@ -1,15 +1,10 @@
 "use server";
 import { IDeleteProductImage } from "@/components/custom/image-scrollarea";
+import { getTokenFromCookies } from "@/utils/auth";
 import { LoginSchema } from "@/schemas/auth";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-
-const getTokenFromCookies = async () => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
-  return token ? token : null;
-};
 
 export const loginUser = async (request: LoginSchema) => {
   const response = await fetch(process.env.NEXT_PUBLIC_BASE_URL + "api/login", {
