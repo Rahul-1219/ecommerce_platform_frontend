@@ -21,7 +21,7 @@ export default async function DashboardLayout({
   return (
     <div>
       <SidebarProvider>
-        <div className="flex h-screen w-full">
+        <div className="flex min-h-[calc(100vh-56px)] w-full">
           {/* Sidebar */}
           <AdminSidebar userData={userData} />
 
@@ -34,12 +34,12 @@ export default async function DashboardLayout({
               {/* Breadcrumb */}
               <BreadcrumbWithCustomSeparator />
             </div>
-
             {/* Separator between breadcrumb and main content */}
             <Separator className="px-2 my-4" />
-
             {/* Page Content */}
-            <section className="flex-1 px-2 overflow-auto">{children}</section>
+            <section className="flex-1 px-2 overflow-visible">
+              {children}
+            </section>
           </div>
         </div>
       </SidebarProvider>
