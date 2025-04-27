@@ -1,4 +1,8 @@
-import { getCategoryDropDownList, productDetail } from "@/app/admin/action";
+import {
+  getCategoryDropDownList,
+  getTagList,
+  productDetail,
+} from "@/app/admin/action";
 import ProductForm from "@/components/forms/product-form";
 
 export default async function ProductUpdate({
@@ -11,6 +15,7 @@ export default async function ProductUpdate({
   const id: string = (await searchParams)!.id as string;
   const { data: categories } = await getCategoryDropDownList();
   const { data } = await productDetail(id);
+  const { data: tags } = await getTagList();
   return (
     <div>
       <ProductForm
@@ -30,6 +35,8 @@ export default async function ProductUpdate({
           ...image,
           name: image?.image,
         }))}
+        tags={tags}
+        selectedTags={data.productTags.map((productTag) => productTag.tagId)}
       />
     </div>
   );

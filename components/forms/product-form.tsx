@@ -13,6 +13,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -22,7 +23,9 @@ import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -36,6 +39,7 @@ import { ButtonLoading } from "../custom/button-loading";
 import { Textarea } from "../ui/textarea";
 import { ImageScrollArea } from "../custom/image-scrollarea";
 import { useRouter } from "next/navigation";
+import { MultiSelect } from "../custom/multi-select";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -44,6 +48,7 @@ const formSchema = z.object({
   images: z.array(z.any()),
   price: z.string().min(1, "Price is required"),
   quantity: z.string().min(1, "Quantity is required"),
+  tags: z.array(z.string()).optional(),
 });
 
 export default function ProductForm({
@@ -54,19 +59,28 @@ export default function ProductForm({
     images: [],
     price: "",
     quantity: "",
+    tags: [],
   },
   productVariants = [],
   categories = [],
   type = "add",
   id = "",
   productImages = [],
+  tags = [],
+  selectedTags,
 }: {
   initialValues?: z.infer<typeof formSchema>;
-  categories: { _id: string; name: string }[];
+  categories: {
+    _id: string;
+    name: string;
+    subcategories: [{ _id: string; name: string }];
+  }[];
   productVariants?: Variant[];
   type?: "add" | "edit";
   id?: string;
   productImages?: any[];
+  tags: { label: string; value: string }[];
+  selectedTags?: string[];
 }) {
   const [showLoaderBtn, setShowLoaderBtn] = useState(false);
   const [variants, setVariants] = useState<Variant[]>(productVariants);
@@ -92,6 +106,7 @@ export default function ProductForm({
       formData.set("price", values.price);
       formData.set("quantity", values.quantity);
       formData.set("description", values.description);
+      formData.set("tags", JSON.stringify(values.tags || []));
 
       for (const image of values?.images) {
         if (typeof image === "object" && "path" in image) {
@@ -168,7 +183,6 @@ export default function ProductForm({
                 )}
               />
             </div>
-
             <div className="col-span-6">
               <FormField
                 control={form.control}
@@ -186,10 +200,21 @@ export default function ProductForm({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {categories.map((category) => (
-                          <SelectItem key={category._id} value={category._id}>
-                            {category.name}
-                          </SelectItem>
+                        {categories?.map((category) => (
+                          <SelectGroup key={category._id}>
+                            <SelectLabel className="font-semibold text-gray-900">
+                              {category.name}
+                            </SelectLabel>
+                            {category?.subcategories?.map((subcategory) => (
+                              <SelectItem
+                                key={subcategory._id}
+                                value={subcategory._id}
+                                className="pl-6" // Add indentation for subcategories
+                              >
+                                {subcategory.name}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
                         ))}
                       </SelectContent>
                     </Select>
@@ -249,6 +274,27 @@ export default function ProductForm({
                       {...field}
                     />
                   </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="tags"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Tags</FormLabel>
+                <FormControl>
+                  <MultiSelect
+                    options={tags}
+                    onValueChange={field.onChange}
+                    defaultValue={selectedTags || field.value}
+                    placeholder="Select tags"
+                    variant="inverted"
+                    animation={1}
+                    maxCount={3}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

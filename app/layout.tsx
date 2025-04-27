@@ -36,9 +36,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen w-full`}
       >
         {/* <ThemeProvider attribute="class" defaultTheme="system" enableSystem> */}
-        <main className="flex-grow w-full max-w-[100vw] overflow-x-hidden">
-          {children}
-        </main>
+        <main className="flex-grow w-full overflow-x-hidden">{children}</main>
         <Toaster />
         {/* </ThemeProvider> */}
       </body>

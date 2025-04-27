@@ -1,8 +1,9 @@
-import { getCategoryDropDownList } from "@/app/admin/action";
+import { getCategoryDropDownList, getTagList } from "@/app/admin/action";
 import ProductForm from "@/components/forms/product-form";
 
 export default async function ProductDetail() {
   const response = await getCategoryDropDownList();
+  const { data: tags } = await getTagList();
 
   return (
     <ProductForm
@@ -15,6 +16,7 @@ export default async function ProductDetail() {
         quantity: "",
       }}
       categories={response.data}
+      tags={tags}
     />
   );
 }
