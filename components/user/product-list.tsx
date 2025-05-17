@@ -11,10 +11,16 @@ import Link from "next/link";
 import ProductCard from "./product-card";
 
 interface Product {
-  id: number;
+  _id: string;
   name: string;
   price: string;
-  category: string;
+  description: string;
+  category: { name: string };
+  images: [
+    {
+      image: string;
+    }
+  ];
 }
 
 interface ProductListProps {
@@ -51,18 +57,17 @@ const ProductList: React.FC<ProductListProps> = ({
           className="px-2 pb-10"
         >
           {products.map((product) => (
-            <SwiperSlide key={product.id} className="!w-[180px] sm:!w-[200px]">
+            <SwiperSlide key={product._id} className="!w-[180px] sm:!w-[200px]">
               <Link href="/product">
                 <ProductCard
-                  id={product.id}
+                  id={product._id}
                   name={product.name}
-                  title={product.name}
-                  brand="Nike"
+                  description={product.description}
                   price={product.price}
                   originalPrice={product.price}
                   discount={10}
-                  category={product.category}
-                  imageUrl="/images/hero/women-fashion.jpeg"
+                  category={product.category.name}
+                  imageUrl={product.images[0].image}
                 />
               </Link>
             </SwiperSlide>
@@ -73,17 +78,16 @@ const ProductList: React.FC<ProductListProps> = ({
       {/* Desktop Grid (lg breakpoint and above) */}
       <div className="hidden xl:grid grid-cols-3 xl:grid-cols-5 gap-4 md:gap-6">
         {products.map((product) => (
-          <Link href="/product" key={product.id}>
+          <Link href="/product" key={product._id}>
             <ProductCard
-              id={product.id}
+              id={product._id}
               name={product.name}
-              title={product.name}
-              brand="Nike"
+              description={product.description}
               price={product.price}
               originalPrice={product.price}
               discount={10}
-              category={product.category}
-              imageUrl="/images/hero/women-fashion.jpeg"
+              category={product.category.name}
+              imageUrl={product.images[0].image}
             />
           </Link>
         ))}
