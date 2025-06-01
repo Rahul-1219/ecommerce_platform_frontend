@@ -35,7 +35,7 @@ const ProductList: React.FC<ProductListProps> = ({
   showAllButton = true,
 }) => {
   return (
-    <div className="container mx-auto p-4 sm:p-6 my-6 sm:my-8 bg-gray-50">
+    <div className="container p-4 sm:p-6 my-6 sm:my-8 bg-gray-50">
       <div className="flex justify-between items-center mb-4 sm:mb-6">
         {/* Responsive title text */}
         <h2 className="text-lg sm:text-xl md:text-2xl font-bold">{title}</h2>
