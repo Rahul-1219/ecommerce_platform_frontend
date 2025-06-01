@@ -1,6 +1,12 @@
 "use client";
 
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
@@ -16,12 +22,6 @@ import * as React from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { CartIcon } from "./cart/cart-icon";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 
 export function Header({ categories }) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);

@@ -1,13 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import React from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { FreeMode, Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import Image from "next/image";
-import Link from "next/link";
+import { FreeMode } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 import ProductCard from "./product-card";
 
 interface Product {
