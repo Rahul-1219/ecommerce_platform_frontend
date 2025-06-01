@@ -1,6 +1,12 @@
 "use client";
 
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
@@ -16,12 +22,6 @@ import * as React from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { CartIcon } from "./cart/cart-icon";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 
 export function Header({ categories }) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -33,7 +33,7 @@ export function Header({ categories }) {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b">
+    <header className="sticky top-0 z-50 bg-white border-b px-4 sm:px-6 md:px-8 lg:px-10">
       <div className="container flex h-16 items-center justify-between px-4">
         {/* Logo and Desktop Navigation */}
         <div className="flex items-center gap-8">

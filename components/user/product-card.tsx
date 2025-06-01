@@ -4,10 +4,9 @@ import React from "react";
 import Image from "next/image";
 
 interface ProductCardProps {
-  id: number;
+  id: string;
   name: string;
-  title?: string;
-  brand?: string;
+  description: string;
   price: string | number;
   originalPrice?: string | number;
   discount?: number | string;
@@ -18,8 +17,7 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({
   name,
-  title,
-  brand,
+  description,
   price,
   originalPrice,
   discount,
@@ -39,38 +37,28 @@ const ProductCard: React.FC<ProductCardProps> = ({
           alt={name}
           width={200}
           height={200}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain"
         />
       </div>
 
       <div className="space-y-1">
-        {brand && (
-          <h3 className="font-medium text-sm sm:text-base line-clamp-1">
-            {brand}
-          </h3>
+        {name && (
+          <h3 className="font-medium text-sm sm:text-base truncate">{name}</h3>
         )}
-        {title && (
-          <p className="text-xs text-gray-600 line-clamp-2 h-10">{title}</p>
-        )}
-        {!brand && !title && (
-          <>
-            <h3 className="font-medium text-sm sm:text-base truncate">
-              {name}
-            </h3>
-            <p className="text-xs sm:text-sm text-gray-500">{category}</p>
-          </>
+        {description && (
+          <p className="text-xs text-gray-600 line-clamp-2">{description}</p>
         )}
 
         <div className="flex flex-col gap-0.5">
           <span className="font-bold text-sm sm:text-base">Rs. {price}</span>
-          {originalPrice && discount && (
+          {/* {originalPrice && discount && (
             <div className="flex items-center gap-1">
               <span className="text-xs text-gray-500 line-through">
                 Rs. {originalPrice}
               </span>
               <span className="text-xs text-green-600">{discount}% OFF</span>
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </div>

@@ -15,7 +15,7 @@ export default async function ProductUpdate({
   const id: string = (await searchParams)!.id as string;
   const { data: categories } = await getCategoryDropDownList();
   const { data } = await productDetail(id);
-  const { data: tags } = await getTagList();
+  const { data: tags } = await getTagList();  
   return (
     <div>
       <ProductForm

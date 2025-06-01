@@ -11,28 +11,7 @@ import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 import React from "react";
 
-export function Hero() {
-  const carouselItems = [
-    {
-      id: 1,
-      image: "/images/hero/women-fashion.jpeg",
-      title: "Summer Sale",
-      subtitle: "Up to 50% Off on Selected Items",
-    },
-    {
-      id: 2,
-      image: "/images/hero/women-fashion.jpeg",
-      title: "New Arrivals",
-      subtitle: "Discover the Latest Trends",
-    },
-    {
-      id: 3,
-      image: "/images/hero/women-fashion.jpeg",
-      title: "Limited Edition",
-      subtitle: "Exclusive Items Available Now",
-    },
-  ];
-
+export function Hero({ banners }) {
   const plugin = React.useRef(
     Autoplay({ delay: 4000, stopOnInteraction: false })
   );
@@ -50,7 +29,7 @@ export function Hero() {
         onMouseLeave={() => plugin.current.play()}
       >
         <CarouselContent className="h-[300px] sm:h-[400px]">
-          {carouselItems.map((item, index) => (
+          {banners?.map((item, index) => (
             <CarouselItem key={item.id} className="h-full">
               <div className="relative w-full h-[300px] sm:h-[400px]">
                 {/* Image container - ensure full height */}
@@ -65,7 +44,7 @@ export function Hero() {
                 </div>
 
                 {/* Text overlay */}
-                <div className="relative h-full flex items-end pb-8 sm:pb-12">
+                <div className="relative h-full flex items-end pb-8 sm:pb-12 px-4 sm:px-6 md:px-8 lg:px-10">
                   <div className="absolute inset-0 bg-black/30" />
                   <div className="container mx-auto px-4 text-left z-10">
                     <div className="max-w-md">
