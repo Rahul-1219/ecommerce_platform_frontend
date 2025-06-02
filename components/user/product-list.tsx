@@ -57,7 +57,7 @@ const ProductList: React.FC<ProductListProps> = ({
         >
           {products.map((product) => (
             <SwiperSlide key={product._id} className="!w-[180px] sm:!w-[200px]">
-              <Link href="/product">
+              <Link href={`/product/${product._id}`}>
                 <ProductCard
                   id={product._id}
                   name={product.name}
@@ -77,7 +77,7 @@ const ProductList: React.FC<ProductListProps> = ({
       {/* Desktop Grid (lg breakpoint and above) */}
       <div className="hidden xl:grid grid-cols-3 xl:grid-cols-5 gap-4 md:gap-6">
         {products.map((product) => (
-          <Link href="/product" key={product._id}>
+          <Link href={`/product/${product._id}`} key={product._id}>
             <ProductCard
               id={product._id}
               name={product.name}

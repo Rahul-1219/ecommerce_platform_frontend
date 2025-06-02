@@ -53,3 +53,21 @@ export const bannersList = async () => {
     throw new Error(error.message);
   }
 };
+
+export const productDetail = async (id: string) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}api/product-detail/${id}`,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        next: { tags: ["product-detail"] },
+      }
+    );
+
+    const resData = await response.json();
+    return resData; // Return product data
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
