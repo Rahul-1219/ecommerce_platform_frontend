@@ -13,6 +13,7 @@ export default async function Home() {
           <ProductList
             key={tag.type}
             title={tag.name}
+            tagId={tag._id}
             products={tag.products}
           />
         ))}

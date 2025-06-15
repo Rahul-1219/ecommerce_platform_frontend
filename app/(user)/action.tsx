@@ -71,3 +71,39 @@ export const productDetail = async (id: string) => {
     throw new Error(error.message);
   }
 };
+
+export const getFilterOptions = async () => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}api/filter-options`,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        next: { tags: ["filter-options"] },
+      }
+    );
+
+    const resData = await response.json();
+    return resData; // Return product data
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const getFilterProducts = async (filterOpts: any, page = 1) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}api/filter-products?page=${page}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(filterOpts),
+      }
+    );
+
+    const resData = await response.json();
+    return resData; // Return product data
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};

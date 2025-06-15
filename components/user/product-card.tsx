@@ -15,14 +15,14 @@ interface ProductCardProps {
   isCompact?: boolean; // used for Swiper cards
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({
+const ProductCard: React.FC<any> = ({
   name,
   description,
   price,
   originalPrice,
   discount,
   category,
-  imageUrl = "/images/hero/women-fashion.jpeg",
+  imageUrl,
   isCompact = false,
 }) => {
   return (
