@@ -24,12 +24,14 @@ interface Product {
 
 interface ProductListProps {
   title: string;
+  tagId: string;
   products: Product[];
   showAllButton?: boolean;
 }
 
 const ProductList: React.FC<ProductListProps> = ({
   title,
+  tagId,
   products,
   showAllButton = true,
 }) => {
@@ -39,9 +41,12 @@ const ProductList: React.FC<ProductListProps> = ({
         {/* Responsive title text */}
         <h2 className="text-lg sm:text-xl md:text-2xl font-bold">{title}</h2>
         {showAllButton && (
-          <button className="text-primary hover:underline text-sm sm:text-base">
+          <Link
+            href={`/filter?t=${tagId}`}
+            className="text-primary hover:underline text-sm sm:text-base"
+          >
             Show all
-          </button>
+          </Link>
         )}
       </div>
 

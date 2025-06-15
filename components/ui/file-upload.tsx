@@ -94,7 +94,6 @@ export const FileUploader = forwardRef<
     const removeFileFromSet = useCallback(
       (i: number) => {
         if (!value) return;
-        console.log(value);
         const newFiles = value.filter((_, index) => index !== i);
         onValueChange(newFiles);
       },
