@@ -109,7 +109,7 @@ export default function ProductListing({
         ...prev,
         ...newFilters,
       }));
-
+      newFilters.category = defaultFilters.category;
       // Use setTimeout to ensure state is updated before loading products
       loadProducts(1, true, newFilters);
 
@@ -146,7 +146,6 @@ export default function ProductListing({
   };
 
   const handleResetFilters = (filters) => {
-    // delete newQuery.t;
     router.push("/filter");
     setFilters(filters);
     loadProducts(1, true, filters);

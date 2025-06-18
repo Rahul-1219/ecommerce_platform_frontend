@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 export function Hero({ banners }) {
@@ -54,7 +55,9 @@ export function Hero({ banners }) {
                       <p className="mt-2 text-sm sm:text-base text-white">
                         {item.subtitle}
                       </p>
-                      <Button className="mt-4">Shop Now</Button>
+                      <Link href={`/filter?c=${item.type}`}>
+                        <Button className="mt-4">Shop Now</Button>
+                      </Link>
                     </div>
                   </div>
                 </div>
