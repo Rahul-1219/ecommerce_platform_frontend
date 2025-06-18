@@ -13,7 +13,7 @@ import ProductCard from "@/components/user/product-card";
 import { useToast } from "@/hooks/use-toast";
 import { Filter, Loader } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
@@ -74,6 +74,24 @@ export default function ProductListing({
 
   const { ref, inView } = useInView({ threshold: 0.2 });
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const tags = searchParams.getAll("t"); // if you're using ?t=...&t=... for multiple tags
+    const category = searchParams.get("c");
+    const sub = searchParams.getAll("s"); // same for subcategories
+    const price = searchParams.get("price");
+
+    const urlFilters: FiltersState = {
+      tags,
+      category: category || "",
+      subcategories: sub,
+      price: price || "",
+    };
+
+    setFilters(urlFilters);
+    loadProducts(1, true, urlFilters);
+  }, [searchParams]);
 
   const loadProducts = useCallback(
     async (page: number, reset = false, reqFilters: any = null) => {

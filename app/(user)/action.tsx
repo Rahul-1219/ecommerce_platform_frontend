@@ -107,3 +107,20 @@ export const getFilterProducts = async (filterOpts: any, page = 1) => {
     throw new Error(error.message);
   }
 };
+export const getProductsSearchList = async () => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}api/products-search-list`,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        next: { tags: ["product-list"] },
+      }
+    );
+
+    const resData = await response.json();
+    return resData; // Return categories data
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};

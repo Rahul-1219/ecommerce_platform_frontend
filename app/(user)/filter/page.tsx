@@ -15,6 +15,9 @@ export default async function ProductsPage({ searchParams }) {
   if (query.c) {
     defaultFilters.category = query.c;
   }
+  if (query.s) {
+    defaultFilters.subcategories.push(query.s);
+  }
   const filterOptions = await getFilterOptions();
   const filterProducts = await getFilterProducts(defaultFilters, 1);
 

@@ -20,14 +20,16 @@ import { CircleUserRound, Menu, X } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
 import { CartIcon } from "./cart/cart-icon";
+import { SearchBox } from "./search-box";
+import { useRouter } from "next/navigation";
 
-export function Header({ categories }) {
+export function Header({ categories, products }) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [openCategory, setOpenCategory] = React.useState<string | null>(null);
-
+  const [isSearchOpen, setIsSearchOpen] = React.useState(false);
+  const router = useRouter();
   const toggleCategory = (categoryId: string) => {
     setOpenCategory(openCategory === categoryId ? null : categoryId);
   };
@@ -56,8 +58,14 @@ export function Header({ categories }) {
                         <ListItem
                           key={sub._id}
                           title={sub.name}
-                          href={`/products/${category.type}/${sub.type}`}
-                        ></ListItem>
+                          href={`/filter?s=${sub._id}`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            router.push(`/filter?s=${sub._id}`, {
+                              scroll: false,
+                            });
+                          }}
+                        />
                       ))}
                     </ul>
                   </NavigationMenuContent>
@@ -68,28 +76,17 @@ export function Header({ categories }) {
         </div>
 
         {/* Search and User Actions */}
-        <div className="flex items-center gap-4">
-          {/* Search Bar */}
-          <div className="relative hidden sm:block">
-            <Input
-              type="text"
-              placeholder="Search products..."
-              className="w-48 md:w-64 h-9 pl-9"
+        <div className="flex items-center gap-2">
+          {/* Desktop Search */}
+          <SearchBox products={products?.data} />
+          {/* Mobile Search */}
+          <div className="sm:hidden">
+            <SearchBox
+              isMobile
+              isOpen={isSearchOpen}
+              onOpenChange={setIsSearchOpen}
+              products={products?.data}
             />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
           </div>
 
           {/* User Actions */}
@@ -156,7 +153,7 @@ export function Header({ categories }) {
                           {category?.subcategories?.map((sub) => (
                             <Link
                               key={sub._id}
-                              href={`/products/${category.type}/${sub.type}`}
+                              href={`/filter?s=${sub._id}`}
                               className="text-sm text-muted-foreground hover:text-foreground transition-colors py-1.5"
                               onClick={() => setIsMenuOpen(false)}
                             >
