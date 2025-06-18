@@ -1,7 +1,7 @@
 import { Footer } from "@/components/user/footer";
 import { Header } from "@/components/user/header";
 import type { Metadata } from "next";
-import { getCategories } from "./action";
+import { getCategories, getProductsSearchList } from "./action";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,9 +14,13 @@ export default async function UserLayout({
   children: React.ReactNode;
 }>) {
   const categoriesResponse = await getCategories();
+  const productsSearchListResponse = await getProductsSearchList();
   return (
     <>
-      <Header categories={categoriesResponse} />
+      <Header
+        categories={categoriesResponse}
+        products={productsSearchListResponse}
+      />
       {children}
       <Footer />
     </>
