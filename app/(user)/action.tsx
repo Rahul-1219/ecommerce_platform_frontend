@@ -124,3 +124,75 @@ export const getProductsSearchList = async () => {
     throw new Error(error.message);
   }
 };
+
+export const signup = async (reqBody) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}api/signup`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(reqBody),
+      }
+    );
+
+    const resData = await response.json();
+    return resData;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const sendVerificationCode = async (reqBody) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}api/send-verification-code`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(reqBody),
+      }
+    );
+
+    const resData = await response.json();
+    return resData;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const verifyCode = async (reqBody) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}api/verify-code`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(reqBody),
+      }
+    );
+
+    const resData = await response.json();
+    return resData;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const login = async (reqBody) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}api/login`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(reqBody),
+      }
+    );
+
+    const resData = await response.json();
+    return resData;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
