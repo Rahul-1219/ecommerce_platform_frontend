@@ -99,9 +99,11 @@ export function Header({ categories, products }) {
                 </Link>
               </Button>
             ) : (
-              <Button variant="ghost" size="sm">
-                Login
-              </Button>
+              <Link href="/login">
+                <Button variant="ghost" size="sm">
+                  Login
+                </Button>
+              </Link>
             )}
             <CartIcon count={1} />
 
