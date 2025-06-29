@@ -1,6 +1,6 @@
 "use server";
 import { IDeleteProductImage } from "@/components/custom/image-scrollarea";
-import { getTokenFromCookies } from "@/utils/auth";
+import { getExpirationTime, getTokenFromCookies } from "@/utils/auth";
 import { LoginSchema } from "@/schemas/auth";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
@@ -17,13 +17,12 @@ export const loginUser = async (request: LoginSchema) => {
   const resData = await response.json();
   if (resData.status) {
     const cookieStore = await cookies();
-    // Set the expiration time to 1 day from now
-    const expiresIn = new Date();
-    expiresIn.setDate(expiresIn.getDate() + 1); // Adds 1 day to the current time
+    // Set the expiration time
+    const expirationTime = await getExpirationTime(resData?.data?.expiresIn);
 
     // Set the cookie with 1-day expiration
     cookieStore.set("token", resData.data.token, {
-      expires: expiresIn,
+      expires: expirationTime,
       path: "/",
     });
 
@@ -33,7 +32,7 @@ export const loginUser = async (request: LoginSchema) => {
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       path: "/",
-      expires: expiresIn,
+      expires: expirationTime,
     });
   }
   return resData;

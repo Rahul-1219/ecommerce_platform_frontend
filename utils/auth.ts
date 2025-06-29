@@ -20,7 +20,7 @@ export const setToken = async (token: string, expiresIn: string) => {
 // .eyJ1c2VySWQiOiI2ODU2YmViYmRiYmNjMzMxMmIzODgyMTkiLCJpYXQiOjE3NTExOTM2NzAsImV4cCI6MTc1MTE5Mzk3MH0
 // .QgYbG7gexawBD - Nh1Fc9mYy6ClGKyNwWWermXCC6BFs;
 
-function getExpirationTime(timeStr: string): Date {
+export function getExpirationTime(timeStr: string): Date {
   const date = new Date();
   const value = parseInt(timeStr);
   const unit = timeStr.slice(-1);
