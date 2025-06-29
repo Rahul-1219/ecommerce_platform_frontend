@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
   const token = (await cookies()).get("token")?.value;
+  const userToken = (await cookies()).get("user-token")?.value;
 
   if (!token && path.startsWith("/admin") && path !== "/admin/login") {
     return NextResponse.redirect(new URL("/admin/login", req.nextUrl));
@@ -11,10 +12,13 @@ export default async function middleware(req: NextRequest) {
   if (token && path === "/admin/login") {
     return NextResponse.redirect(new URL("/admin", req.nextUrl));
   }
+  if (userToken && (path === "/login" || path === "/signup")) {
+    return NextResponse.redirect(new URL("/", req.nextUrl));
+  }
   return NextResponse.next();
 }
 
 // Routes Middleware should not run on
 export const config = {
-  matcher: ["/admin(.*)"], // Apply middleware to all routes under /admin/
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"], // Apply middleware to all routes under /admin/
 };

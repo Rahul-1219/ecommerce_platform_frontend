@@ -1,5 +1,7 @@
 "use server";
 
+import { setToken } from "@/utils/auth";
+
 export const getCategories = async () => {
   try {
     const response = await fetch(
@@ -173,6 +175,10 @@ export const verifyCode = async (reqBody) => {
     );
 
     const resData = await response.json();
+    if (resData.status === 1) {
+      // Set token to cookies
+      await setToken(resData?.data?.token, resData?.data?.expiresIn);
+    }
     return resData;
   } catch (error: any) {
     throw new Error(error.message);
@@ -189,8 +195,11 @@ export const login = async (reqBody) => {
         body: JSON.stringify(reqBody),
       }
     );
-
     const resData = await response.json();
+    if (resData.status === 1) {
+      // Set token to cookies
+      await setToken(resData?.data?.token, resData?.data?.expiresIn);
+    }
     return resData;
   } catch (error: any) {
     throw new Error(error.message);
