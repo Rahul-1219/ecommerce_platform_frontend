@@ -95,7 +95,6 @@ export function SearchBox({
             className="block p-3 hover:bg-gray-50"
             onClick={() => {
               setShowResults(false);
-              setQuery("");
               onOpenChange?.(false);
             }}
           >
