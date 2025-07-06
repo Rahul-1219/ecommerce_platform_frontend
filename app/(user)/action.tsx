@@ -1,6 +1,7 @@
 "use server";
 
 import { setToken } from "@/utils/auth";
+import { cookies } from "next/headers";
 
 export const getCategories = async () => {
   try {
@@ -163,7 +164,7 @@ export const sendVerificationCode = async (reqBody) => {
   }
 };
 
-export const verifyCode = async (reqBody) => {
+export const verifyCode = async (reqBody, isPasswordForgot = false) => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}api/verify-code`,
@@ -176,8 +177,10 @@ export const verifyCode = async (reqBody) => {
 
     const resData = await response.json();
     if (resData.status === 1) {
-      // Set token to cookies
-      await setToken(resData?.data?.token, resData?.data?.expiresIn);
+      if (!isPasswordForgot) {
+        // Set token to cookies
+        await setToken(resData?.data?.token, resData?.data?.expiresIn);
+      }
     }
     return resData;
   } catch (error: any) {
@@ -204,4 +207,27 @@ export const login = async (reqBody) => {
   } catch (error: any) {
     throw new Error(error.message);
   }
+};
+
+export const forgotPassword = async (reqBody, token) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}api/forgot-password`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: token },
+        body: JSON.stringify(reqBody),
+      }
+    );
+    const resData = await response.json();
+    return resData;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+// Clear token from local storage and Logout user
+export const logOut = async () => {
+  const cookieStore = await cookies();
+  cookieStore.set("user-token", "");
 };

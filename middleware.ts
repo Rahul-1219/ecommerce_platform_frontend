@@ -12,8 +12,14 @@ export default async function middleware(req: NextRequest) {
   if (token && path === "/admin/login") {
     return NextResponse.redirect(new URL("/admin", req.nextUrl));
   }
-  if (userToken && (path === "/login" || path === "/signup")) {
+  if (
+    userToken &&
+    (path === "/login" || path === "/signup" || path === "/forgot-password")
+  ) {
     return NextResponse.redirect(new URL("/", req.nextUrl));
+  }
+  if (!userToken && path === "/profile") {
+    return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
   return NextResponse.next();
 }

@@ -16,13 +16,20 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import { CircleUserRound, Menu, X } from "lucide-react";
+import { CircleUserRound, LogOut, Menu, User, X } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import * as React from "react";
 import { Button } from "../ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 import { CartIcon } from "./cart/cart-icon";
 import { SearchBox } from "./search-box";
-import { useRouter } from "next/navigation";
+import { logOut } from "@/app/(user)/action";
 
 export function HeaderClient({ categories, products, isAuthenticated }) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -38,6 +45,11 @@ export function HeaderClient({ categories, products, isAuthenticated }) {
     setIsLoggedIn(isAuthenticated);
   }, [isAuthenticated]);
 
+  const handleLogout = async () => {
+    // Clear token from local storage and log out user
+    await logOut();
+    router.push("/login");
+  };
   return (
     <header className="sticky top-0 z-50 bg-white border-b px-4 sm:px-6 md:px-8 lg:px-10">
       <div className="container flex h-16 items-center justify-between">
@@ -96,12 +108,31 @@ export function HeaderClient({ categories, products, isAuthenticated }) {
           {/* User Actions */}
           <div className="flex items-center gap-2">
             {isLoggedIn ? (
-              <Button variant="ghost" size="icon" asChild>
-                <Link href="/profile">
-                  <CircleUserRound className="h-5 w-5" />
-                  <span className="sr-only">User Profile</span>
-                </Link>
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <CircleUserRound className="h-5 w-5" />
+                    <span className="sr-only">User Profile</span>
+                  </Button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent align="end" className="w-40">
+                  <DropdownMenuItem asChild className="cursor-pointer">
+                    <Link href="/profile" className="flex items-center gap-2">
+                      <User className="h-4 w-4" />
+                      Profile
+                    </Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               <Link href="/login">
                 <Button variant="ghost" size="sm">
