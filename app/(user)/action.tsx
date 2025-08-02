@@ -1,7 +1,9 @@
 "use server";
 
-import { setToken } from "@/utils/auth";
+import { getTokenFromCookies, setToken } from "@/utils/auth";
+import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export const getCategories = async () => {
   try {
@@ -230,4 +232,76 @@ export const forgotPassword = async (reqBody, token) => {
 export const logOut = async () => {
   const cookieStore = await cookies();
   cookieStore.set("user-token", "");
+};
+
+export const getUserProfile = async () => {
+  try {
+    const token = await getTokenFromCookies("user-token");
+    if (token) {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/user-profile`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json", Authorization: token },
+          next: { tags: ["user-profile"] },
+        }
+      );
+
+      const resData = await response.json();
+      return resData;
+    } else {
+      // If no token exists, redirect to login
+      redirect("/login");
+    }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const updateProfile = async (request) => {
+  try {
+    const token = await getTokenFromCookies("user-token");
+    if (token) {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/update-profile`,
+        {
+          method: "POST",
+          headers: { Authorization: token },
+          body: request,
+        }
+      );
+
+      const resData = await response.json();
+      revalidateTag("user-profile");
+      return resData;
+    } else {
+      // If no token exists, redirect to login
+      redirect("/login");
+    }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+export const changePassword = async (request) => {
+  try {
+    const token = await getTokenFromCookies("user-token");
+    if (token) {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/change-profile`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: token },
+          body: JSON.stringify(request),
+        }
+      );
+
+      const resData = await response.json();
+      return resData;
+    } else {
+      // If no token exists, redirect to login
+      redirect("/login");
+    }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
 };
