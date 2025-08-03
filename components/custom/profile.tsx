@@ -1,5 +1,5 @@
 "use client";
-import { updateProfile } from "@/app/(user)/action";
+import { changePassword, logOut, updateProfile } from "@/app/(user)/action";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -28,6 +28,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { OrderStatus } from "@/components/user/order-status";
 import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -94,13 +95,13 @@ const profileFormSchema = z.object({
 
 const passwordFormSchema = z
   .object({
-    currentPassword: z.string().min(6, {
+    currentPassword: z.string().min(8, {
       message: "Password must be at least 6 characters.",
     }),
-    newPassword: z.string().min(6, {
+    newPassword: z.string().min(8, {
       message: "Password must be at least 6 characters.",
     }),
-    confirmPassword: z.string().min(6, {
+    confirmPassword: z.string().min(8, {
       message: "Password must be at least 6 characters.",
     }),
   })
@@ -133,12 +134,12 @@ type PasswordFormValues = z.infer<typeof passwordFormSchema>;
 type AddressFormValues = z.infer<typeof addressFormSchema>;
 
 export default function Profile({ userProfile, defaultAddress }) {
-  console.log("userProfile: ", userProfile);
   // State for managing addresses
   const [addresses, setAddresses] = useState(userProfile?.addresses || []);
   const [isAddressUpdate, setIsAddressUpdate] = useState(false);
   const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
   const { toast } = useToast();
+  const router = useRouter();
 
   // Forms
   const profileForm = useForm<ProfileFormValues>({
@@ -199,9 +200,29 @@ export default function Profile({ userProfile, defaultAddress }) {
     }
   }
 
-  function onPasswordSubmit(data: PasswordFormValues) {
-    // Here you would typically make an API call to update the password
-    passwordForm.reset();
+  async function onPasswordSubmit(data: PasswordFormValues) {
+    try {
+      const response = await changePassword({
+        oldPassword: data.currentPassword,
+        newPassword: data.newPassword,
+      });
+      if (!response.status) throw new Error(response.message);
+      toast({
+        variant: "default",
+        title: response.message,
+        duration: 2000,
+      });
+      passwordForm.reset();
+      // After change password logout user and redirect to login
+      await logOut();
+      router.push("/login");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: error.message,
+        duration: 2000,
+      });
+    }
   }
   async function onAddressSubmit(data: AddressFormValues) {
     const newAddress = {
@@ -278,8 +299,6 @@ export default function Profile({ userProfile, defaultAddress }) {
 
   useEffect(() => {
     if (isAddressUpdate) {
-      console.log("HERER", addresses);
-
       const cleanedAddresses = addresses.map(({ _id, ...rest }) => rest);
       updateAddresses(cleanedAddresses);
       setIsAddressUpdate(false);

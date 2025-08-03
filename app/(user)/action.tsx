@@ -287,7 +287,7 @@ export const changePassword = async (request) => {
     const token = await getTokenFromCookies("user-token");
     if (token) {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}api/change-profile`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/change-password`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json", Authorization: token },
