@@ -136,12 +136,14 @@ export const getProductsSearchList = async () => {
 
 export const signup = async (reqBody) => {
   try {
+    const sessionId: string = await getSessionId();
+
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}api/signup`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(reqBody),
+        body: JSON.stringify({ ...reqBody, sessionId }),
       }
     );
 
@@ -196,12 +198,13 @@ export const verifyCode = async (reqBody, isPasswordForgot = false) => {
 
 export const login = async (reqBody) => {
   try {
+    const sessionId: string = await getSessionId();
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}api/login`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(reqBody),
+        body: JSON.stringify({ ...reqBody, sessionId }),
       }
     );
     const resData = await response.json();
@@ -329,6 +332,7 @@ export const addToCart = async (request) => {
     );
     const resData = await response.json();
     revalidateTag("cart-list");
+    revalidateTag("cart-count");
     return resData;
   } catch (error: any) {
     throw new Error(error.message);
@@ -378,6 +382,7 @@ export const updateCartItem = async (request, itemId) => {
     );
     const resData = await response.json();
     revalidateTag("cart-list");
+    revalidateTag("cart-count");
     return resData;
   } catch (error: any) {
     throw new Error(error.message);
@@ -402,6 +407,32 @@ export const removeCartItem = async (itemId) => {
     );
     const resData = await response.json();
     revalidateTag("cart-list");
+    revalidateTag("cart-count");
+    return resData;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const getCartItemsCount = async () => {
+  try {
+    const token = await getTokenFromCookies("user-token");
+    let sessionId: string | null = "";
+    if (!token) sessionId = await getSessionId();
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}api/cart/items/count${
+        sessionId ? `?sessionId=${sessionId}` : ""
+      }`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: token } : {}),
+        },
+        next: { tags: ["cart-count"] },
+      }
+    );
+    const resData = await response.json();
     return resData;
   } catch (error: any) {
     throw new Error(error.message);

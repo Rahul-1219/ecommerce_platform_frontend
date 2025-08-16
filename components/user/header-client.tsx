@@ -31,7 +31,12 @@ import { CartIcon } from "./cart/cart-icon";
 import { SearchBox } from "./search-box";
 import { logOut } from "@/app/(user)/action";
 
-export function HeaderClient({ categories, products, isAuthenticated }) {
+export function HeaderClient({
+  categories,
+  products,
+  isAuthenticated,
+  itemCount,
+}) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = React.useState(isAuthenticated);
   const [openCategory, setOpenCategory] = React.useState<string | null>(null);
@@ -140,7 +145,7 @@ export function HeaderClient({ categories, products, isAuthenticated }) {
                 </Button>
               </Link>
             )}
-            <CartIcon count={1} />
+            <CartIcon count={itemCount} />
 
             {/* Mobile Menu Toggle */}
             <Button
