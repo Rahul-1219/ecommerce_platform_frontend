@@ -54,6 +54,8 @@ const LoginForm: React.FC = () => {
         description: error.message,
         duration: 2000,
       });
+    } finally {
+      setShowLoaderBtn(false);
     }
   };
 

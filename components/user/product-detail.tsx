@@ -1,6 +1,7 @@
 "use client";
-import { Check, Heart, Share2, ShoppingCart, Star } from "lucide-react";
-import { useRef, useState } from "react";
+
+import { Heart, Loader2, Share2, ShoppingCart, Star } from "lucide-react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
@@ -8,42 +9,117 @@ import "swiper/css/thumbs";
 import "swiper/css/zoom";
 import { FreeMode, Navigation, Thumbs, Zoom } from "swiper/modules";
 import { Swiper, SwiperClass, SwiperSlide } from "swiper/react";
+import { addToCart } from "@/app/(user)/action";
+import { useToast } from "@/hooks/use-toast";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+
+interface Variant {
+  _id: string;
+  price: number;
+  size?: string;
+  color?: string;
+  quantity: number;
+}
 
 const ProductDetail = ({ product }) => {
+  const { toast } = useToast();
+  const router = useRouter();
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [selectedColor, setSelectedColor] = useState(
-    product?.productVariants?.[0]?.color || ""
-  );
-  const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null);
+  const [isAddingCart, setIsAddingCart] = useState(false);
+
   const mainSwiperRef = useRef(null);
 
-  const currentVariant =
-    product?.productVariants?.find((v: any) => v.color === selectedColor) ||
-    product?.productVariants?.[0] ||
-    {};
+  // Group variants by color (replace empty with "No Color")
+  const groupedVariants = useMemo(() => {
+    if (!product?.productVariants) return {};
+    return product.productVariants.reduce((acc, variant) => {
+      const colorKey = variant.color?.trim() || "No Color";
+      if (!acc[colorKey]) acc[colorKey] = [];
+      acc[colorKey].push(variant);
+      return acc;
+    }, {});
+  }, [product]);
 
-  const availableSizes = currentVariant?.size
-    ? currentVariant?.size.split(", ")
-    : [];
+  // Check if any real colors exist
+  const hasColors = useMemo(() => {
+    return Object.keys(groupedVariants).some((c) => c !== "No Color");
+  }, [groupedVariants]);
 
-  const hasColors = product?.productVariants?.some((v) => v.color);
-  const hasSizes = availableSizes?.length > 0;
   const hasPrice = product?.productVariants?.some((v) => v.price);
 
-  const handleQuantityChange = (value) => {
+  // Sizes for the selected color
+  const availableSizes = useMemo(() => {
+    if (!selectedColor || !groupedVariants[selectedColor]) return [];
+    return groupedVariants[selectedColor].map((v) => v.size);
+  }, [selectedColor, groupedVariants]);
+
+  // Update selectedVariant when color/size changes
+  useEffect(() => {
+    // Default selection: if no colors at all, select "No Color"
+    if (!selectedColor) {
+      if (groupedVariants["No Color"]) {
+        setSelectedColor("No Color");
+      } else {
+        const firstColor = Object.keys(groupedVariants)[0];
+        setSelectedColor(firstColor);
+      }
+    }
+
+    if (selectedColor && selectedSize && groupedVariants[selectedColor]) {
+      const variant = groupedVariants[selectedColor].find(
+        (v) => v.size === selectedSize
+      );
+      setSelectedVariant(variant || null);
+    } else if (selectedColor && groupedVariants[selectedColor]) {
+      const variant = groupedVariants[selectedColor][0];
+      setSelectedSize(variant.size || null);
+      setSelectedVariant(variant);
+    }
+  }, [selectedColor, selectedSize, groupedVariants]);
+
+  const currentVariant = selectedVariant;
+
+  const handleQuantityChange = (value: number) => {
     const newValue = quantity + value;
-    if (newValue >= 1 && newValue <= currentVariant?.quantity) {
+    if (newValue >= 1 && newValue <= (currentVariant?.quantity || 1)) {
       setQuantity(newValue);
+    }
+  };
+
+  const handleAddToCart = async () => {
+    setIsAddingCart(true);
+    try {
+      const response = await addToCart({
+        productId: product._id,
+        productVariantId: currentVariant?._id || "",
+        quantity: quantity,
+        size: selectedSize || "",
+      });
+      if (!response.status) throw new Error(response.message);
+      router.push("/cart");
+      toast({ title: response.message, duration: 2000 });
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: error.message || "Failed to add to cart",
+        duration: 2000,
+      });
+    } finally {
+      setIsAddingCart(false);
     }
   };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
-        {/* Product Images with Swiper */}
+        {/* Product Images */}
         <div className="lg:w-1/2">
           <div className="mb-4 rounded-xl overflow-hidden shadow-sm relative">
             <Swiper
@@ -64,21 +140,21 @@ const ProductDetail = ({ product }) => {
               {product?.productImages?.map((img) => (
                 <SwiperSlide key={img._id}>
                   <div className="swiper-zoom-container">
-                    <img
+                    <Image
+                      fill
                       src={img.image}
                       alt={product?.name}
                       className="w-full h-full object-contain p-4"
                     />
                   </div>
-                  {/* Badges */}
                   <div className="absolute top-4 left-4 flex gap-2 z-10">
                     {!product?.isActive && (
                       <span className="bg-gray-800 text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
                         Out of Stock
                       </span>
                     )}
-                    {currentVariant?.quantity < 5 &&
-                      currentVariant?.quantity > 0 && (
+                    {currentVariant?.quantity! < 5 &&
+                      currentVariant?.quantity! > 0 && (
                         <span className="bg-amber-100 text-amber-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
                           Low Stock
                         </span>
@@ -86,19 +162,15 @@ const ProductDetail = ({ product }) => {
                   </div>
                 </SwiperSlide>
               ))}
-              {/* Custom Navigation Buttons */}
               <div className="swiper-button-next !w-10 !h-10 !bg-white/80 !rounded-full !shadow-md !text-gray-700 after:!text-xl after:!font-bold" />
               <div className="swiper-button-prev !w-10 !h-10 !bg-white/80 !rounded-full !shadow-md !text-gray-700 after:!text-xl after:!font-bold" />
             </Swiper>
           </div>
-
-          {/* Thumbnail Gallery */}
           <Swiper
             onSwiper={setThumbsSwiper}
             spaceBetween={12}
             slidesPerView={"auto"}
             freeMode={true}
-            centeredSlides={false}
             watchSlidesProgress={true}
             modules={[FreeMode, Navigation, Thumbs]}
             className="!py-2"
@@ -112,7 +184,8 @@ const ProductDetail = ({ product }) => {
                       : "border-transparent hover:border-gray-200"
                   }`}
                 >
-                  <img
+                  <Image
+                    fill
                     src={img.image}
                     alt=""
                     className="w-full h-full object-cover"
@@ -125,7 +198,6 @@ const ProductDetail = ({ product }) => {
 
         {/* Product Details */}
         <div className="lg:w-1/2">
-          {/* Title and Actions */}
           <div className="flex justify-between items-start mb-4">
             <div>
               <span className="text-sm text-gray-500">
@@ -168,88 +240,77 @@ const ProductDetail = ({ product }) => {
             <span className="text-sm text-gray-500 ml-2">(128 reviews)</span>
           </div>
 
-          {/* Price Section */}
+          {/* Price */}
           <div className="mb-6 p-4 bg-gray-50 rounded-lg">
             <div className="flex items-baseline gap-3">
-              {/* Show variant price if variants exist, otherwise show global price */}
-              {product?.productVariants?.length > 0 && hasPrice ? (
-                <>
-                  {/* Current variant price */}
-                  <span className="text-3xl font-bold text-gray-900">
-                    Rs. {currentVariant?.price?.toFixed(2)}
-                  </span>
-                  {/* Optional: Show original price if discounted */}
-                  {currentVariant?.originalPrice && (
-                    <span className="text-lg text-gray-500 line-through">
-                      Rs. {currentVariant?.originalPrice?.toFixed(2)}
-                    </span>
-                  )}
-                </>
+              {hasPrice ? (
+                <span className="text-3xl font-bold text-gray-900">
+                  Rs. {currentVariant?.price?.toFixed(2)}
+                </span>
               ) : (
-                /* Global product price when no variants exist */
                 <span className="text-3xl font-bold text-gray-900">
                   Rs. {product?.price?.toFixed(2)}
                 </span>
               )}
             </div>
             <div className="mt-2 text-sm text-gray-600">
-              {/* Stock availability - checks variant quantity if variants exist, otherwise product quantity */}
-              {product?.productVariants?.length > 0 && hasPrice ? (
-                currentVariant?.quantity > 0 ? (
-                  <span className="text-green-600 font-medium">
-                    {currentVariant?.quantity} available
-                  </span>
-                ) : (
-                  <span className="text-red-600 font-medium">Out of stock</span>
-                )
-              ) : product?.quantity > 0 ? (
+              {currentVariant?.quantity! > 0 ? (
                 <span className="text-green-600 font-medium">
-                  {product?.quantity} available
+                  {currentVariant?.quantity} available
                 </span>
               ) : (
                 <span className="text-red-600 font-medium">Out of stock</span>
               )}
             </div>
           </div>
-          {/* Color Variants - only show if colors exist */}
+
+          {/* Color selector (skip if only "No Color") */}
           {hasColors && (
             <div className="mb-6">
               <h3 className="text-sm font-medium text-gray-900 mb-2">Color</h3>
               <div className="flex gap-2">
-                {product?.productVariants?.map((variant) => (
+                {Object.keys(groupedVariants).map((color) => (
                   <button
-                    key={variant._id}
+                    key={color}
                     onClick={() => {
-                      setSelectedColor(variant.color);
+                      setSelectedColor(color);
                       setSelectedSize(null);
+                      setQuantity(1);
                     }}
                     className={`w-10 h-10 rounded-full transition-all flex items-center justify-center relative ${
-                      selectedColor === variant.color
+                      selectedColor === color
                         ? "after:content-[''] after:absolute after:inset-[-4px] after:rounded-full after:border-2 after:border-[#c2c2c2]"
                         : ""
                     }`}
-                    style={{ backgroundColor: variant.color.toLowerCase() }}
-                    title={variant.color}
-                  ></button>
+                    style={{
+                      backgroundColor:
+                        color === "No Color" ? "#e5e7eb" : color.toLowerCase(),
+                    }}
+                    title={color}
+                  >
+                    {color === "No Color" && (
+                      <span className="text-xs text-gray-600">N</span>
+                    )}
+                  </button>
                 ))}
               </div>
             </div>
           )}
 
-          {/* Size Selection - only show if sizes exist */}
-          {hasSizes && (
+          {/* Size selector */}
+          {availableSizes.length > 0 && (
             <div className="mb-6">
               <div className="flex justify-between items-center mb-2">
                 <h3 className="text-sm font-medium text-gray-900">Size</h3>
-                <button className="text-xs text-blue-600 hover:text-blue-800">
-                  Size guide
-                </button>
               </div>
               <div className="grid grid-cols-5 gap-2">
-                {availableSizes?.map((size) => (
+                {availableSizes.map((size) => (
                   <button
                     key={size}
-                    onClick={() => setSelectedSize(size)}
+                    onClick={() => {
+                      setSelectedSize(size || null);
+                      setQuantity(1);
+                    }}
                     disabled={!product?.isActive}
                     className={`py-2 px-3 border rounded-md text-sm font-medium transition-all ${
                       selectedSize === size
@@ -266,14 +327,14 @@ const ProductDetail = ({ product }) => {
             </div>
           )}
 
-          {/* Quantity Selector */}
+          {/* Quantity */}
           <div className="mb-8">
             <h3 className="text-sm font-medium text-gray-900 mb-2">Quantity</h3>
             <div className="flex items-center max-w-xs">
               <button
                 onClick={() => handleQuantityChange(-1)}
                 disabled={quantity <= 1 || !product?.isActive}
-                className="w-10 h-10 border border-gray-300 rounded-l-md flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                className="w-10 h-10 border border-gray-300 rounded-l-md flex items-center justify-center disabled:opacity-50 hover:bg-gray-50"
               >
                 -
               </button>
@@ -283,33 +344,49 @@ const ProductDetail = ({ product }) => {
               <button
                 onClick={() => handleQuantityChange(1)}
                 disabled={
-                  quantity >= currentVariant?.quantity || !product?.isActive
+                  quantity >=
+                    (currentVariant
+                      ? currentVariant?.quantity
+                      : product?.quantity || 1) || !product?.isActive
                 }
-                className="w-10 h-10 border border-gray-300 rounded-r-md flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                className="w-10 h-10 border border-gray-300 rounded-r-md flex items-center justify-center disabled:opacity-50 hover:bg-gray-50"
               >
                 +
               </button>
             </div>
           </div>
 
-          {/* Action Buttons */}
+          {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 mb-8">
             <button
-              disabled={!selectedSize || !product?.isActive}
-              className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-medium flex-1 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              disabled={
+                (!selectedSize || !product?.isActive || isAddingCart) &&
+                product?.productVariants.length !== 0
+              }
+              className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-medium flex-1 flex items-center justify-center gap-2 disabled:opacity-50"
+              onClick={handleAddToCart}
             >
-              <ShoppingCart className="w-5 h-5" />
-              Add to Cart
+              {isAddingCart ? (
+                <Loader2 />
+              ) : (
+                <>
+                  <ShoppingCart className="w-5 h-5" />
+                  Add to Cart
+                </>
+              )}
             </button>
             <button
-              disabled={!selectedSize || !product?.isActive}
-              className="bg-gray-900 hover:bg-gray-800 text-white py-3 px-6 rounded-lg font-medium flex-1 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              disabled={
+                (!selectedSize || !product?.isActive) &&
+                product?.productVariants.length !== 0
+              }
+              className="bg-gray-900 hover:bg-gray-800 text-white py-3 px-6 rounded-lg font-medium flex-1 disabled:opacity-50"
             >
               Buy Now
             </button>
           </div>
 
-          {/* Product Description */}
+          {/* Description */}
           <div className="mb-8">
             <h3 className="text-lg font-medium text-gray-900 mb-3">
               Description

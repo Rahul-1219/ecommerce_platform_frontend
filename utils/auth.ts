@@ -16,10 +16,6 @@ export const setToken = async (token: string, expiresIn: string) => {
   });
 };
 
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-// .eyJ1c2VySWQiOiI2ODU2YmViYmRiYmNjMzMxMmIzODgyMTkiLCJpYXQiOjE3NTExOTM2NzAsImV4cCI6MTc1MTE5Mzk3MH0
-// .QgYbG7gexawBD - Nh1Fc9mYy6ClGKyNwWWermXCC6BFs;
-
 export function getExpirationTime(timeStr: string): Date {
   const date = new Date();
   const value = parseInt(timeStr);
@@ -45,3 +41,34 @@ export function getExpirationTime(timeStr: string): Date {
 
   return date;
 }
+
+// Util to generate guest session ID
+export function generateSessionId() {
+  const random = Math.random().toString(36).substring(2, 10);
+  const timestamp = Date.now();
+  return `guest_${random}_${timestamp}`;
+}
+
+// Create session id if not exist
+export async function checkAndCreateSessionId() {
+  const cookieStore = await cookies();
+  let sessionId = cookieStore.get("sessionId")?.value || "";
+
+  if (!sessionId) {
+    sessionId = generateSessionId();
+    cookieStore.set("sessionId", sessionId, {
+      maxAge: 60 * 60 * 24 * 30, // 1 month in seconds
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+    });
+  }
+
+  return sessionId;
+}
+
+export const getSessionId = async () => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("sessionId")?.value;
+  return token ? token : "";
+};
