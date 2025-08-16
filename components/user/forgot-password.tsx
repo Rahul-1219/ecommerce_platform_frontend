@@ -150,7 +150,6 @@ export const ForgotPassword = () => {
       };
       // Verify code
       const response = await forgotPassword(forgotPasswordReq, token);
-      console.log(response);
       if (response.status) {
         router.push("/login");
         // Reset all forms

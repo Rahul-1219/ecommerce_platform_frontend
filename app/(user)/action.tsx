@@ -1,6 +1,6 @@
 "use server";
 
-import { getTokenFromCookies, setToken } from "@/utils/auth";
+import { getTokenFromCookies, setToken, getSessionId } from "@/utils/auth";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -95,7 +95,7 @@ export const getFilterOptions = async () => {
   }
 };
 
-export const getFilterProducts = async (filterOpts: any, page = 1) => {
+export const getFilterProducts = async (filterOpts: unknown, page = 1) => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}api/filter-products?page=${page}`,
@@ -109,7 +109,11 @@ export const getFilterProducts = async (filterOpts: any, page = 1) => {
     const resData = await response.json();
     return resData; // Return product data
   } catch (error: any) {
-    throw new Error(error.message);
+    if (error instanceof Error) {
+      console.error(error.message); // Safe access
+    } else {
+      console.error(String(error)); // Fallback for non-Error throws
+    }
   }
 };
 export const getProductsSearchList = async () => {
@@ -282,6 +286,7 @@ export const updateProfile = async (request) => {
     throw new Error(error.message);
   }
 };
+
 export const changePassword = async (request) => {
   try {
     const token = await getTokenFromCookies("user-token");
@@ -301,6 +306,103 @@ export const changePassword = async (request) => {
       // If no token exists, redirect to login
       redirect("/login");
     }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const addToCart = async (request) => {
+  try {
+    const token = await getTokenFromCookies("user-token");
+    let sessionId: string | null = "";
+    if (!token) sessionId = await getSessionId();
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}api/cart`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: token } : {}),
+        },
+        body: JSON.stringify({ ...request, sessionId }),
+      }
+    );
+    const resData = await response.json();
+    revalidateTag("cart-list");
+    return resData;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const getCart = async () => {
+  try {
+    const token = await getTokenFromCookies("user-token");
+    let sessionId: string | null = "";
+    if (!token) sessionId = await getSessionId();
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}api/cart${
+        sessionId ? `?sessionId=${sessionId}` : ""
+      }`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: token } : {}),
+        },
+        next: { tags: ["cart-list"] },
+      }
+    );
+    const resData = await response.json();
+    return resData;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const updateCartItem = async (request, itemId) => {
+  try {
+    const token = await getTokenFromCookies("user-token");
+    let sessionId: string | null = "";
+    if (!token) sessionId = await getSessionId();
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}api/cart/${itemId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: token } : {}),
+        },
+        body: JSON.stringify({ ...request, sessionId }),
+      }
+    );
+    const resData = await response.json();
+    revalidateTag("cart-list");
+    return resData;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const removeCartItem = async (itemId) => {
+  try {
+    const token = await getTokenFromCookies("user-token");
+    let sessionId: string | null = "";
+    if (!token) sessionId = await getSessionId();
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}api/cart/${itemId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: token } : {}),
+        },
+        body: JSON.stringify({ sessionId }),
+      }
+    );
+    const resData = await response.json();
+    revalidateTag("cart-list");
+    return resData;
   } catch (error: any) {
     throw new Error(error.message);
   }

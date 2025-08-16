@@ -1,10 +1,15 @@
-import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
+import { checkAndCreateSessionId } from "./utils/auth";
 
 export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
   const token = (await cookies()).get("token")?.value;
   const userToken = (await cookies()).get("user-token")?.value;
+  if (!userToken) {
+    const sessionId = (await cookies()).get("sessionId")?.value;
+    if (!sessionId) await checkAndCreateSessionId();
+  }
 
   if (!token && path.startsWith("/admin") && path !== "/admin/login") {
     return NextResponse.redirect(new URL("/admin/login", req.nextUrl));

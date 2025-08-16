@@ -2,15 +2,18 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Minus, Plus, Trash2 } from "lucide-react";
+import Link from "next/link";
 
 interface CartItemProps {
   id: string;
+  productId: string;
   name: string;
   price: number;
   size: string;
   color: string;
   quantity: number;
   image: string;
+  stock: number;
   onIncrease: () => void;
   onDecrease: () => void;
   onRemove: () => void;
@@ -18,12 +21,14 @@ interface CartItemProps {
 
 export function CartItem({
   id,
+  productId,
   name,
   price,
   size,
   color,
   quantity,
   image,
+  stock,
   onIncrease,
   onDecrease,
   onRemove,
@@ -31,24 +36,39 @@ export function CartItem({
   return (
     <div className="flex gap-4 py-6 border-b">
       <div className="relative h-24 w-24 rounded-md overflow-hidden">
-        <Image
-          src={image}
-          alt={name}
-          fill
-          className="object-cover"
-          sizes="(max-width: 640px) 100vw, 96px"
-        />
+        <Link href={`/product/${productId}`}>
+          <Image
+            src={image}
+            alt={name}
+            fill
+            className="object-contain transition-transform duration-300 hover:scale-110"
+            sizes="(max-width: 640px) 100vw, 96px"
+          />
+        </Link>
       </div>
 
       <div className="flex-1 flex flex-col">
         <div className="flex justify-between">
           <div>
-            <h3 className="font-medium text-gray-900">{name}</h3>
-            <p className="mt-1 text-sm text-gray-500">
-              {color} / {size}
-            </p>
+            <Link href={`/product/${productId}`}>
+              <h3 className="font-medium text-gray-900 hover:text-blue-500">
+                {name}
+              </h3>
+            </Link>
+            <div className="mt-1 flex items-center gap-2 text-sm text-gray-500">
+              {color && (
+                <>
+                  <span
+                    className="w-4 h-4 rounded-full border border-gray-300"
+                    style={{ backgroundColor: color }}
+                  />
+                  <span>/</span>
+                </>
+              )}
+              <span>{size}</span>
+            </div>
           </div>
-          <p className="font-medium text-gray-900">${price.toFixed(2)}</p>
+          <p className="font-medium text-gray-900">Rs. {price.toFixed(2)}</p>
         </div>
 
         <div className="mt-4 flex-1 flex items-end justify-between">
@@ -58,6 +78,7 @@ export function CartItem({
               size="icon"
               className="h-8 w-8 rounded-r-none"
               onClick={onDecrease}
+              disabled={quantity <= 1}
             >
               <Minus className="h-4 w-4" />
             </Button>
@@ -67,6 +88,7 @@ export function CartItem({
               size="icon"
               className="h-8 w-8 rounded-l-none"
               onClick={onIncrease}
+              disabled={quantity >= stock}
             >
               <Plus className="h-4 w-4" />
             </Button>

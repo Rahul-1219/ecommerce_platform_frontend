@@ -122,13 +122,13 @@ export default function ProductForm({
         if (response?.status) {
           const id: string = response?.data?._id;
           const type: string = response?.data?.type;
-          router.push(`/admin/product/${type}?id=${id}`);
         }
       } else {
         response = await updateProduct(formData, id);
       }
       if (response.status) {
         form.setValue("images", []);
+        router.push('/admin/product');
         toast({
           title: response.message,
           duration: 2000,
