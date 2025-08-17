@@ -61,11 +61,19 @@ export const bannersList = async () => {
 
 export const productDetail = async (id: string) => {
   try {
+    const token = await getTokenFromCookies("user-token");
+    let sessionId: string | null = "";
+    if (!token) sessionId = await getSessionId();
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}api/product-detail/${id}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}api/product-detail/${id}${
+        sessionId ? `?sessionId=${sessionId}` : ""
+      }`,
       {
         method: "GET",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: token } : {}),
+        },
         next: { tags: ["product-detail"] },
       }
     );
