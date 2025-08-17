@@ -20,6 +20,7 @@ interface Variant {
   size?: string;
   color?: string;
   quantity: number;
+  isAddedToCart: boolean;
 }
 
 const ProductDetail = ({ product }) => {
@@ -103,7 +104,7 @@ const ProductDetail = ({ product }) => {
         size: selectedSize || "",
       });
       if (!response.status) throw new Error(response.message);
-      router.push("/cart");
+      // router.push("/cart");
       toast({ title: response.message, duration: 2000 });
     } catch (error: any) {
       toast({
@@ -285,6 +286,10 @@ const ProductDetail = ({ product }) => {
                     style={{
                       backgroundColor:
                         color === "No Color" ? "#e5e7eb" : color.toLowerCase(),
+                      border:
+                        color.toLowerCase() === "white"
+                          ? "1px solid #ccc"
+                          : "none",
                     }}
                     title={color}
                   >
@@ -358,23 +363,34 @@ const ProductDetail = ({ product }) => {
 
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 mb-8">
-            <button
-              disabled={
-                (!selectedSize || !product?.isActive || isAddingCart) &&
-                product?.productVariants.length !== 0
-              }
-              className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-medium flex-1 flex items-center justify-center gap-2 disabled:opacity-50"
-              onClick={handleAddToCart}
-            >
-              {isAddingCart ? (
-                <Loader2 />
-              ) : (
-                <>
-                  <ShoppingCart className="w-5 h-5" />
-                  Add to Cart
-                </>
-              )}
-            </button>
+            {currentVariant?.isAddedToCart ? (
+              <button
+                className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-medium flex-1 flex items-center justify-center gap-2 disabled:opacity-50"
+                onClick={() => router.push("/cart")}
+              >
+                <ShoppingCart className="w-5 h-5" />
+                Go to Cart
+              </button>
+            ) : (
+              <button
+                disabled={
+                  (!selectedSize || !product?.isActive || isAddingCart) &&
+                  product?.productVariants.length !== 0
+                }
+                className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-medium flex-1 flex items-center justify-center gap-2 disabled:opacity-50"
+                onClick={handleAddToCart}
+              >
+                {isAddingCart ? (
+                  <Loader2 />
+                ) : (
+                  <>
+                    <ShoppingCart className="w-5 h-5" />
+                    Add to Cart
+                  </>
+                )}
+              </button>
+            )}
+
             <button
               disabled={
                 (!selectedSize || !product?.isActive) &&

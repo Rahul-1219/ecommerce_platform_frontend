@@ -1,6 +1,7 @@
 // components/cart/OrderSummary.tsx
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
 
 interface OrderSummaryProps {
   subtotal: number;
@@ -57,13 +58,13 @@ export function OrderSummary({
       <div className="mt-4 flex justify-center text-center text-sm text-gray-500">
         <p>
           or{" "}
-          <a
-            href="/shop"
+          <Link
+            href={"/filter"}
             className="font-medium text-primary hover:text-primary/80"
           >
             Continue Shopping
             <span aria-hidden="true"> &rarr;</span>
-          </a>
+          </Link>
         </p>
       </div>
     </div>
