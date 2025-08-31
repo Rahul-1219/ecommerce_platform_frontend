@@ -45,6 +45,7 @@ export const columns: ColumnDef<User>[] = [
       ) : (
         <CircleX color="red" />
       ),
+    meta: { title: "Verified" },
   },
   {
     accessorKey: "isActive",
