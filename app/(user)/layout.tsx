@@ -1,6 +1,8 @@
 import { Footer } from "@/components/user/footer";
 import Header from "@/components/user/header";
 import type { Metadata } from "next";
+import { getUserProfile } from "./action";
+import { UserStoreProvider } from "@/context/user-store";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -12,11 +14,14 @@ export default async function UserLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Get user profile data
+  const response = await getUserProfile();
+  const userProfile = response?.data;
   return (
-    <>
+    <UserStoreProvider initialUser={userProfile}>
       <Header />
       {children}
       <Footer />
-    </>
+    </UserStoreProvider>
   );
 }

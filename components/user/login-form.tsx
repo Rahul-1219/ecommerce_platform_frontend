@@ -18,6 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useUserStore } from "@/context/user-store";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -48,6 +49,7 @@ export function LoginForm({
   const [email, setEmail] = useState("");
   const router = useRouter();
   const { toast } = useToast();
+  const { refreshUserStore } = useUserStore();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -77,6 +79,7 @@ export function LoginForm({
           throw new Error(sendVerificationCodeRes.message);
         }
       } else if (response.status == 1) {
+        refreshUserStore();
         router.push("/");
       } else {
         throw new Error(response.message);
@@ -96,6 +99,7 @@ export function LoginForm({
       // Verify code
       const response = await verifyCode(data);
       if (response.status) {
+        refreshUserStore();
         router.push("/");
       } else {
         throw new Error(response.message);

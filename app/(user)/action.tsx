@@ -265,8 +265,7 @@ export const getUserProfile = async () => {
       const resData = await response.json();
       return resData;
     } else {
-      // If no token exists, redirect to login
-      redirect("/login");
+      return null;
     }
   } catch (error: any) {
     throw new Error(error.message);
@@ -438,6 +437,50 @@ export const getCartItemsCount = async () => {
           ...(token ? { Authorization: token } : {}),
         },
         next: { tags: ["cart-count"] },
+      }
+    );
+    const resData = await response.json();
+    return resData;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const createCheckoutSession = async (requestBody) => {
+  try {
+    const token = await getTokenFromCookies("user-token");
+    if (token) {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/create-checkout-session`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: token } : {}),
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
+      const resData = await response.json();
+      return resData;
+    } else {
+      return null;
+    }
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const verifyStripePayment = async (requestBody) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}api/verify-payment`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
       }
     );
     const resData = await response.json();
