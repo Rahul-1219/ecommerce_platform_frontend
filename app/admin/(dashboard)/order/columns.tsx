@@ -1,10 +1,13 @@
 "use client";
 
 import { DataTableColumnHeader } from "@/components/custom/data-table-header";
+import { DrawerDialog } from "@/components/custom/drawer-dialog";
+import { OrderStatusForm } from "@/components/forms/order-status-form";
 import { Badge } from "@/components/ui/badge";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { RefreshCcw } from "lucide-react";
+import { useRef } from "react";
 
 // This type is used to define the shape of our data.
 export type Order = {
@@ -102,8 +105,43 @@ export const columns: ColumnDef<Order>[] = [
     accessorKey: "Action",
     header: "Action",
     cell: ({ row }) => {
+      const order = row.original;
+      const drawerRef = useRef<any>(null);
+
+      const closeDrawer = () => {
+        if (drawerRef.current) {
+          drawerRef.current.close();
+        }
+      };
+
+      const terminalStatuses = ["delivered", "cancelled", "returned"];
+      const isTerminal = terminalStatuses.includes(order.status);
+
+      if (isTerminal) {
+        return (
+          <RefreshCcw size={22} strokeWidth={1.25} className="text-gray-400" />
+        );
+      }
+
       return (
-        <RefreshCcw size={24} strokeWidth={1.25} className="cursor-pointer" />
+        <DrawerDialog
+          ref={drawerRef}
+          title="Update Order Status"
+          rowText="Update"
+          button={
+            <RefreshCcw
+              size={22}
+              strokeWidth={1.25}
+              className="cursor-pointer text-blue-600"
+            />
+          }
+        >
+          <OrderStatusForm
+            orderId={order._id}
+            currentStatus={order.status}
+            onClose={closeDrawer}
+          />
+        </DrawerDialog>
       );
     },
   },
