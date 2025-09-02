@@ -13,14 +13,14 @@ import {
 import {
   Box,
   LayoutDashboard,
-  Settings,
+  Package,
   ShoppingBasket,
   UsersRound,
 } from "lucide-react";
-import { usePathname } from "next/navigation";
-import SidebarUser from "./sidebar-user";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ModeToggle } from "./mode-toggle";
+import SidebarUser from "./sidebar-user";
 
 // Menu items.
 const items = [
@@ -45,9 +45,9 @@ const items = [
     icon: ShoppingBasket,
   },
   {
-    title: "Settings",
-    url: "/admin/setting",
-    icon: Settings,
+    title: "Orders",
+    url: "/admin/order",
+    icon: Package,
   },
 ];
 

@@ -30,6 +30,7 @@ import {
 import { CartIcon } from "./cart/cart-icon";
 import { SearchBox } from "./search-box";
 import { logOut } from "@/app/(user)/action";
+import { useUserStore } from "@/context/user-store";
 
 export function HeaderClient({
   categories,
@@ -45,7 +46,7 @@ export function HeaderClient({
   const toggleCategory = (categoryId: string) => {
     setOpenCategory(openCategory === categoryId ? null : categoryId);
   };
-
+  const { clearUser } = useUserStore();
   React.useEffect(() => {
     setIsLoggedIn(isAuthenticated);
   }, [isAuthenticated]);
@@ -53,6 +54,7 @@ export function HeaderClient({
   const handleLogout = async () => {
     // Clear token from local storage and log out user
     await logOut();
+    clearUser();
     router.push("/login");
   };
   return (

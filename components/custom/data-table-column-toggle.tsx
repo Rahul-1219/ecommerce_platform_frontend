@@ -12,6 +12,10 @@ import {
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 
+interface CustomColumnMeta {
+  title: string;
+}
+
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;
 }
@@ -39,7 +43,8 @@ export function DataTableViewOptions<TData>({
           .map((column) => {
             const headerText =
               typeof column.columnDef.header === "function"
-                ? column.id // Pass an empty object or the required context for HeaderContext
+                ? (column.columnDef.meta as CustomColumnMeta)?.title ||
+                  column.id
                 : column.columnDef.header;
             return (
               <DropdownMenuCheckboxItem

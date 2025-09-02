@@ -7,6 +7,7 @@ type OrderStatusProps = {
 
 export function OrderStatus({ status }: OrderStatusProps) {
   const statusMap = {
+    pending: { label: "Processing", color: "bg-yellow-500" },
     processing: { label: "Processing", color: "bg-yellow-500" },
     shipped: { label: "Shipped", color: "bg-blue-500" },
     delivered: { label: "Delivered", color: "bg-green-500" },

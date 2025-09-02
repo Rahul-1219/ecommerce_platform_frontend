@@ -406,3 +406,50 @@ export const getTagList = async () => {
   // If no token exists, redirect to login
   redirect("/admin/login");
 };
+
+export const getOrdersList = async () => {
+  const token = await getTokenFromCookies();
+  if (token) {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}api/admin/orders`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: token,
+        },
+        next: { tags: ["orders-list"] },
+      }
+    );
+
+    const resData = await response.json();
+    return resData; // Return tags data
+  }
+
+  // If no token exists, redirect to login
+  redirect("/admin/login");
+};
+
+export const updateOrderStatus = async (
+  orderId: string,
+  data: { status: string; note?: string }
+) => {
+  const token = await getTokenFromCookies();
+  if (token) {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}api/admin/update-order-status/${orderId}`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: token,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    const resData = await response.json();
+    revalidateTag("orders-list");
+    return resData;
+  }
+  // If no token exists, redirect to login
+  redirect("/admin/login");
+};

@@ -22,16 +22,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { OrderStatus } from "@/components/user/order-status";
+import { useUserStore } from "@/context/user-store";
 import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import OrderHistory from "../common/order-history";
 
 // Mock user data
 const user = {
@@ -133,14 +133,18 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>;
 type PasswordFormValues = z.infer<typeof passwordFormSchema>;
 type AddressFormValues = z.infer<typeof addressFormSchema>;
 
-export default function Profile({ userProfile, defaultAddress }) {
+export default function Profile({ orders }) {
   // State for managing addresses
+  const { user: userProfile, updateUser } = useUserStore();
   const [addresses, setAddresses] = useState(userProfile?.addresses || []);
   const [isAddressUpdate, setIsAddressUpdate] = useState(false);
   const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
   const { toast } = useToast();
   const router = useRouter();
-
+  const defaultAddress = useMemo(
+    () => addresses.find((address) => address.isDefault) || null,
+    [addresses]
+  );
   // Forms
   const profileForm = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -191,6 +195,8 @@ export default function Profile({ userProfile, defaultAddress }) {
       const response = await updateProfile(formData);
 
       if (!response.status) throw new Error(response.message);
+
+      updateUser(response.data);
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -268,7 +274,7 @@ export default function Profile({ userProfile, defaultAddress }) {
       state: address.state || "",
       pincode: address.pincode || "",
       isDefault: !!address.isDefault,
-      type: address.type || "home",
+      type: address.type === "other" ? "other" : "home",
     });
   }
 
@@ -288,6 +294,7 @@ export default function Profile({ userProfile, defaultAddress }) {
       formData.append("addresses", JSON.stringify(data));
       const response = await updateProfile(formData);
       if (!response.status) throw new Error(response.message);
+      updateUser({ addresses: response.data.addresses || data });
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -828,47 +835,7 @@ export default function Profile({ userProfile, defaultAddress }) {
 
             {/* Orders tab */}
             <TabsContent value="orders">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Order History</CardTitle>
-                  <CardDescription>
-                    Your recent orders and their status
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ScrollArea className="h-[500px]">
-                    <div className="space-y-6">
-                      {user.recentOrders.map((order) => (
-                        <div key={order.id} className="border rounded-lg p-4">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <h3 className="font-medium">Order #{order.id}</h3>
-                              <p className="text-sm text-muted-foreground">
-                                {new Date(order.date).toLocaleDateString()}
-                              </p>
-                            </div>
-                            <OrderStatus status={order.status} />
-                          </div>
-                          <Separator className="my-3" />
-                          <div className="flex justify-between">
-                            <span className="text-sm">
-                              {order.items} {order.items > 1 ? "items" : "item"}
-                            </span>
-                            <span className="font-medium">
-                              ${order.total.toFixed(2)}
-                            </span>
-                          </div>
-                          <div className="mt-4 flex justify-end">
-                            <Button variant="outline" size="sm">
-                              View Details
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </ScrollArea>
-                </CardContent>
-              </Card>
+              <OrderHistory orders={orders} />
             </TabsContent>
           </Tabs>
         </div>
