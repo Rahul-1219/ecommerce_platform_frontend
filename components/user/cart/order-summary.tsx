@@ -19,6 +19,7 @@ interface OrderSummaryProps {
   cartItems: any;
   shippingAddress: any;
   cartId: string;
+  isLogin: boolean;
 }
 
 export function OrderSummary({
@@ -29,12 +30,17 @@ export function OrderSummary({
   cartItems,
   shippingAddress,
   cartId,
+  isLogin,
 }: OrderSummaryProps) {
   const { toast } = useToast();
   const [isCheckout, setIsCheckout] = useState(false);
   const router = useRouter();
   const handleCheckout = async () => {
     try {
+      if (!isLogin) {
+        router.push("/login");
+        return;
+      }
       if (!cartItems || cartItems.length === 0) return;
       if (!shippingAddress) {
         throw new Error("Please select shipping address.");

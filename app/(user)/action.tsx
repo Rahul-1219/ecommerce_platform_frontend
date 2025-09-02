@@ -462,6 +462,7 @@ export const createCheckoutSession = async (requestBody) => {
         }
       );
       const resData = await response.json();
+      revalidateTag("user-orders");
       return resData;
     } else {
       return null;
@@ -484,7 +485,30 @@ export const verifyStripePayment = async (requestBody) => {
       }
     );
     const resData = await response.json();
+    revalidateTag("user-orders");
     return resData;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const getUserOrders = async () => {
+  try {
+    const token = await getTokenFromCookies("user-token");
+    if (token) {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/orders`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json", Authorization: token },
+          next: { tags: ["user-orders"] },
+        }
+      );
+      const resData = await response.json();
+      return resData;
+    } else {
+      return null;
+    }
   } catch (error: any) {
     throw new Error(error.message);
   }

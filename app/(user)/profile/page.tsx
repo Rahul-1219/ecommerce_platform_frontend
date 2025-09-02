@@ -1,7 +1,9 @@
 import Profile from "@/components/custom/profile";
+import { getUserOrders } from "../action";
 
 const page = async () => {
-  return <Profile />;
+  const { data: orders } = await getUserOrders();
+  return <Profile orders={orders} />;
 };
 
 export default page;

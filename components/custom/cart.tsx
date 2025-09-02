@@ -217,6 +217,7 @@ export default function Cart({ cart }) {
                       (addr) => addr._id === selectedAddressId
                     )}
                     cartId={cart?.cartId}
+                    isLogin={user ? true : false}
                   />
                 </CardContent>
               </Card>
