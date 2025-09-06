@@ -32,6 +32,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import OrderHistory from "../common/order-history";
+import { Loader2 } from "lucide-react";
 
 // Mock user data
 const user = {
@@ -139,6 +140,7 @@ export default function Profile({ orders }) {
   const [addresses, setAddresses] = useState(userProfile?.addresses || []);
   const [isAddressUpdate, setIsAddressUpdate] = useState(false);
   const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
+  const [isProfileSubmit, setIsProfileSubmit] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
   const defaultAddress = useMemo(
@@ -183,6 +185,7 @@ export default function Profile({ orders }) {
   // Form handlers
   async function onProfileSubmit(data: ProfileFormValues) {
     try {
+      setIsProfileSubmit(true);
       const formData = new FormData();
       formData.append("name", data.name);
       formData.append("email", data.email);
@@ -203,6 +206,8 @@ export default function Profile({ orders }) {
         title: error.message,
         duration: 2000,
       });
+    } finally {
+      setIsProfileSubmit(false);
     }
   }
 
@@ -317,7 +322,7 @@ export default function Profile({ orders }) {
       <div className="flex flex-col md:flex-row gap-8">
         {/* Profile sidebar */}
         <div className="w-full md:w-1/3 lg:w-1/4">
-          <Card>
+          <Card className="rounded-[0.125rem]">
             <CardHeader className="flex flex-col items-center">
               <Avatar className="w-24 h-24 mb-4">
                 <AvatarImage src={userProfile?.avatar} />
@@ -344,15 +349,19 @@ export default function Profile({ orders }) {
 
         {/* Main content */}
         <div className="w-full md:w-2/3 lg:w-3/4">
-          <Tabs defaultValue="profile" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="profile">Profile</TabsTrigger>
-              <TabsTrigger value="orders">Orders</TabsTrigger>
+          <Tabs defaultValue="profile" className="w-full ">
+            <TabsList className="grid w-full grid-cols-2 rounded-[0.125rem]">
+              <TabsTrigger value="profile" className="rounded-[0.125rem]">
+                Profile
+              </TabsTrigger>
+              <TabsTrigger value="orders" className="rounded-[0.125rem]">
+                Orders
+              </TabsTrigger>
             </TabsList>
 
             {/* Profile tab */}
             <TabsContent value="profile">
-              <Card>
+              <Card className="rounded-[0.125rem]">
                 <CardHeader>
                   <CardTitle>Profile Information</CardTitle>
                   <CardDescription>
@@ -372,7 +381,11 @@ export default function Profile({ orders }) {
                           <FormItem>
                             <FormLabel>Name</FormLabel>
                             <FormControl>
-                              <Input placeholder="Your name" {...field} />
+                              <Input
+                                placeholder="Your name"
+                                {...field}
+                                className="rounded-[0.125rem]"
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -387,6 +400,7 @@ export default function Profile({ orders }) {
                             <FormControl>
                               <Input
                                 placeholder="Your email"
+                                className="rounded-[0.125rem]"
                                 {...field}
                                 disabled
                               />
@@ -407,6 +421,7 @@ export default function Profile({ orders }) {
                             <FormControl>
                               <Input
                                 placeholder="Your phone number"
+                                className="rounded-[0.125rem]"
                                 {...field}
                               />
                             </FormControl>
@@ -423,6 +438,7 @@ export default function Profile({ orders }) {
                             <FormControl>
                               <Input
                                 type="file"
+                                className="rounded-[0.125rem]"
                                 onChange={(e) =>
                                   field.onChange(e.target.files?.[0])
                                 }
@@ -433,15 +449,21 @@ export default function Profile({ orders }) {
                           </FormItem>
                         )}
                       />
-                      <CardFooter className="px-0 pb-0">
-                        <Button type="submit">Save changes</Button>
+                      <CardFooter className="px-0 pb-0 pt-4">
+                        <Button
+                          type="submit"
+                          className="rounded-[0.125rem] bg-customBlack"
+                          disabled={isProfileSubmit}
+                        >
+                          {isProfileSubmit && <Loader2 />} Save changes
+                        </Button>
                       </CardFooter>
                     </form>
                   </Form>
                 </CardContent>
               </Card>
 
-              <Card className="mt-6">
+              <Card className="mt-6 rounded-[0.125rem]">
                 <CardHeader>
                   <CardTitle>Change Password</CardTitle>
                 </CardHeader>
@@ -462,6 +484,7 @@ export default function Profile({ orders }) {
                                 type="password"
                                 placeholder="Current password"
                                 autoComplete="true"
+                                className="rounded-[0.125rem]"
                                 {...field}
                               />
                             </FormControl>
@@ -480,6 +503,7 @@ export default function Profile({ orders }) {
                                 type="password"
                                 placeholder="New password"
                                 autoComplete="true"
+                                className="rounded-[0.125rem]"
                                 {...field}
                               />
                             </FormControl>
@@ -498,6 +522,7 @@ export default function Profile({ orders }) {
                                 type="password"
                                 placeholder="Confirm new password"
                                 autoComplete="true"
+                                className="rounded-[0.125rem]"
                                 {...field}
                               />
                             </FormControl>
@@ -505,8 +530,13 @@ export default function Profile({ orders }) {
                           </FormItem>
                         )}
                       />
-                      <CardFooter className="px-0 pb-0">
-                        <Button type="submit">Update Password</Button>
+                      <CardFooter className="px-0 pb-0 pt-4">
+                        <Button
+                          type="submit"
+                          className="rounded-[0.125rem] bg-customBlack"
+                        >
+                          Update Password
+                        </Button>
                       </CardFooter>
                     </form>
                   </Form>
@@ -514,7 +544,7 @@ export default function Profile({ orders }) {
               </Card>
 
               {/* Address Book Section */}
-              <Card className="mt-6">
+              <Card className="mt-6 rounded-[0.125rem]">
                 <CardHeader>
                   <CardTitle>Address Book</CardTitle>
                   <CardDescription>
@@ -542,6 +572,7 @@ export default function Profile({ orders }) {
                                       <FormControl>
                                         <Input
                                           placeholder="Street address"
+                                          className="rounded-[0.125rem]"
                                           {...field}
                                         />
                                       </FormControl>
@@ -556,7 +587,11 @@ export default function Profile({ orders }) {
                                     <FormItem>
                                       <FormLabel>City</FormLabel>
                                       <FormControl>
-                                        <Input placeholder="City" {...field} />
+                                        <Input
+                                          placeholder="City"
+                                          {...field}
+                                          className="rounded-[0.125rem]"
+                                        />
                                       </FormControl>
                                       <FormMessage />
                                     </FormItem>
@@ -569,7 +604,11 @@ export default function Profile({ orders }) {
                                     <FormItem>
                                       <FormLabel>State/Province</FormLabel>
                                       <FormControl>
-                                        <Input placeholder="State" {...field} />
+                                        <Input
+                                          placeholder="State"
+                                          {...field}
+                                          className="rounded-[0.125rem]"
+                                        />
                                       </FormControl>
                                       <FormMessage />
                                     </FormItem>
@@ -580,12 +619,11 @@ export default function Profile({ orders }) {
                                   name="pincode"
                                   render={({ field }) => (
                                     <FormItem>
-                                      <FormLabel>
-                                        Pin Code/Postal Code
-                                      </FormLabel>
+                                      <FormLabel>Pin Code</FormLabel>
                                       <FormControl>
                                         <Input
                                           placeholder="Pin Code code"
+                                          className="rounded-[0.125rem]"
                                           {...field}
                                         />
                                       </FormControl>
@@ -600,10 +638,11 @@ export default function Profile({ orders }) {
                                     <FormItem>
                                       <FormLabel>Address Type</FormLabel>
                                       <FormControl>
-                                        <div className="flex gap-2">
+                                        <div className="flex flex-wrap gap-2">
                                           {["home", "other"].map((value) => (
                                             <Button
                                               key={value}
+                                              size="sm"
                                               type="button"
                                               variant={
                                                 field.value === value
@@ -613,6 +652,7 @@ export default function Profile({ orders }) {
                                               onClick={() =>
                                                 field.onChange(value)
                                               }
+                                              className="rounded-[0.125rem] flex-1 min-w-[100px] text-center"
                                             >
                                               {value === "home"
                                                 ? "🏠 Home"
@@ -636,6 +676,7 @@ export default function Profile({ orders }) {
                                         <Checkbox
                                           checked={field.value}
                                           onCheckedChange={field.onChange}
+                                          className="rounded-[0.125rem]"
                                         />
                                       </FormControl>
                                       <div className="space-y-1 leading-none">
@@ -652,10 +693,16 @@ export default function Profile({ orders }) {
                                   variant="outline"
                                   type="button"
                                   onClick={handleCancelEdit}
+                                  className="rounded-[0.125rem]"
                                 >
                                   Cancel
                                 </Button>
-                                <Button type="submit">Save Address</Button>
+                                <Button
+                                  type="submit"
+                                  className="rounded-[0.125rem] bg-customBlack"
+                                >
+                                  Save Address
+                                </Button>
                               </div>
                             </form>
                           </Form>
@@ -678,6 +725,7 @@ export default function Profile({ orders }) {
                                 <Button
                                   variant="outline"
                                   size="sm"
+                                  className="rounded-[0.125rem]"
                                   onClick={() => handleEditAddress(address)}
                                 >
                                   Edit
@@ -685,6 +733,7 @@ export default function Profile({ orders }) {
                                 <Button
                                   variant="outline"
                                   size="sm"
+                                  className="rounded-[0.125rem]"
                                   onClick={() =>
                                     handleDeleteAddress(address._id)
                                   }
@@ -718,6 +767,7 @@ export default function Profile({ orders }) {
                                     <FormControl>
                                       <Input
                                         placeholder="Street address"
+                                        className="rounded-[0.125rem]"
                                         {...field}
                                       />
                                     </FormControl>
@@ -732,7 +782,11 @@ export default function Profile({ orders }) {
                                   <FormItem>
                                     <FormLabel>City</FormLabel>
                                     <FormControl>
-                                      <Input placeholder="City" {...field} />
+                                      <Input
+                                        placeholder="City"
+                                        {...field}
+                                        className="rounded-[0.125rem]"
+                                      />
                                     </FormControl>
                                     <FormMessage />
                                   </FormItem>
@@ -745,7 +799,11 @@ export default function Profile({ orders }) {
                                   <FormItem>
                                     <FormLabel>State/Province</FormLabel>
                                     <FormControl>
-                                      <Input placeholder="State" {...field} />
+                                      <Input
+                                        placeholder="State"
+                                        {...field}
+                                        className="rounded-[0.125rem]"
+                                      />
                                     </FormControl>
                                     <FormMessage />
                                   </FormItem>
@@ -756,10 +814,11 @@ export default function Profile({ orders }) {
                                 name="pincode"
                                 render={({ field }) => (
                                   <FormItem>
-                                    <FormLabel>Pin Code/Postal Code</FormLabel>
+                                    <FormLabel>Pin Code</FormLabel>
                                     <FormControl>
                                       <Input
-                                        placeholder="Pin Code code"
+                                        placeholder="Pin Code"
+                                        className="rounded-[0.125rem]"
                                         {...field}
                                       />
                                     </FormControl>
@@ -774,16 +833,18 @@ export default function Profile({ orders }) {
                                   <FormItem>
                                     <FormLabel>Address Type</FormLabel>
                                     <FormControl>
-                                      <div className="flex gap-2">
+                                      <div className="flex flex-wrap gap-2">
                                         {["home", "other"].map((value) => (
                                           <Button
                                             key={value}
+                                            size="sm"
                                             type="button"
                                             variant={
                                               field.value === value
                                                 ? "default"
                                                 : "outline"
                                             }
+                                            className="rounded-[0.125rem] flex-1 min-w-[100px] text-center"
                                             onClick={() =>
                                               field.onChange(value)
                                             }
@@ -810,6 +871,7 @@ export default function Profile({ orders }) {
                                       <Checkbox
                                         checked={field.value}
                                         onCheckedChange={field.onChange}
+                                        className="rounded-[0.125rem]"
                                       />
                                     </FormControl>
                                     <div className="space-y-1 leading-none">
@@ -821,8 +883,13 @@ export default function Profile({ orders }) {
                                 )}
                               />
                             </div>
-                            <CardFooter className="px-0 pb-0 pt-4">
-                              <Button type="submit">Add New Address</Button>
+                            <CardFooter className="px-0 pb-0 pt-8">
+                              <Button
+                                type="submit"
+                                className="rounded-[0.125rem] bg-customBlack"
+                              >
+                                Add New Address
+                              </Button>
                             </CardFooter>
                           </form>
                         </Form>

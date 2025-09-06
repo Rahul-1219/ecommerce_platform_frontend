@@ -116,9 +116,11 @@ export function LoginForm({
   }
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
+      <Card className="rounded-[0.125rem]">
         <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
+          <CardTitle className="text-customBlack">
+            Login to your account
+          </CardTitle>
           <CardDescription>
             Enter your email below to login to your account
           </CardDescription>
@@ -133,7 +135,11 @@ export function LoginForm({
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="m@example.com" {...field} />
+                      <Input
+                        placeholder="m@example.com"
+                        {...field}
+                        className="rounded-[0.125rem]"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -148,7 +154,7 @@ export function LoginForm({
                       <FormLabel>Password</FormLabel>
                       <Link
                         href="/forgot-password"
-                        className="ml-auto inline-block text-sm font-medium underline-offset-4 hover:underline"
+                        className="ml-auto inline-block text-sm font-medium underline-offset-4 hover:underline capitalize"
                       >
                         Forgot password?
                       </Link>
@@ -158,6 +164,7 @@ export function LoginForm({
                         <Input
                           type={showPassword ? "text" : "password"}
                           autoComplete="true"
+                          className="rounded-[0.125rem]"
                           {...field}
                         />
                         <Button
@@ -184,7 +191,7 @@ export function LoginForm({
               />
               <Button
                 type="submit"
-                className="w-full"
+                className="w-full rounded-[0.125rem] uppercase"
                 disabled={isLoginLoading}
               >
                 {isLoginLoading ? (
@@ -199,7 +206,7 @@ export function LoginForm({
             Don&apos;t have an account?{" "}
             <Link
               href="/signup"
-              className="font-medium underline underline-offset-4"
+              className="font-medium underline underline-offset-4 uppercase"
             >
               Sign up
             </Link>

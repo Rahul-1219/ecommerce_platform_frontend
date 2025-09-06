@@ -101,12 +101,12 @@ export function HeaderClient({
         </div>
 
         {/* Search and User Actions */}
-        <div className="flex items-center gap-1 md:gap-8">
+        <div className="flex items-center gap-3 md:gap-8">
           {/* Desktop Search */}
           <SearchBox products={products?.data} />
 
           {/* User Actions */}
-          <div className="flex items-center gap-1 md:gap-8">
+          <div className="flex items-center gap-3 md:gap-8">
             {isLoggedIn ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild className="cursor-pointer">

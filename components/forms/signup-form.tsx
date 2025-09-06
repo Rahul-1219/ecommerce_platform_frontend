@@ -133,7 +133,7 @@ export function SignupForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
+      <Card className="rounded-[0.125rem]">
         <CardHeader>
           <CardTitle>Create Account</CardTitle>
           <CardDescription>
@@ -150,7 +150,11 @@ export function SignupForm({
                   <FormItem>
                     <FormLabel>Full Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="John Doe" {...field} />
+                      <Input
+                        placeholder="John Doe"
+                        {...field}
+                        className="rounded-[0.125rem]"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -163,7 +167,11 @@ export function SignupForm({
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="m@example.com" {...field} />
+                      <Input
+                        placeholder="m@example.com"
+                        {...field}
+                        className="rounded-[0.125rem]"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -179,6 +187,7 @@ export function SignupForm({
                       <Input
                         placeholder="+1 (555) 123-4567"
                         autoComplete="true"
+                        className="rounded-[0.125rem]"
                         {...field}
                       />
                     </FormControl>
@@ -197,6 +206,7 @@ export function SignupForm({
                         <Input
                           type={showPassword ? "text" : "password"}
                           autoComplete="true"
+                          className="rounded-[0.125rem]"
                           {...field}
                         />
                         <Button
@@ -232,6 +242,7 @@ export function SignupForm({
                         <Input
                           type={showConfirmPassword ? "text" : "password"}
                           autoComplete="true"
+                          className="rounded-[0.125rem]"
                           {...field}
                         />
                         <Button
@@ -262,7 +273,7 @@ export function SignupForm({
               />
               <Button
                 type="submit"
-                className="w-full"
+                className="w-full rounded-[0.125rem] uppercase"
                 disabled={isSignupLoading}
               >
                 {isSignupLoading ? (
@@ -275,7 +286,10 @@ export function SignupForm({
           </Form>
           <div className="mt-4 text-center text-sm">
             Already have an account?{" "}
-            <Link href="/login" className="underline underline-offset-4">
+            <Link
+              href="/login"
+              className="underline underline-offset-4 uppercase"
+            >
               Login
             </Link>
           </div>
