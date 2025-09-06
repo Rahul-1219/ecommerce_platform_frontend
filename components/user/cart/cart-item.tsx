@@ -51,7 +51,7 @@ export function CartItem({
         <div className="flex justify-between">
           <div>
             <Link href={`/product/${productId}`}>
-              <h3 className="font-medium text-gray-900 hover:text-blue-500">
+              <h3 className="font-medium text-customBlack hover:text-blue-500">
                 {name}
               </h3>
             </Link>
@@ -68,7 +68,7 @@ export function CartItem({
               <span>{size}</span>
             </div>
           </div>
-          <p className="font-medium text-gray-900">Rs. {price.toFixed(2)}</p>
+          <p className="font-medium text-customBlack">Rs. {price.toFixed(2)}</p>
         </div>
 
         <div className="mt-4 flex-1 flex items-end justify-between">
@@ -76,7 +76,7 @@ export function CartItem({
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 rounded-r-none"
+              className="h-8 w-8 rounded-r-none rounded-l-[0.125rem]"
               onClick={onDecrease}
               disabled={quantity <= 1}
             >
@@ -86,7 +86,7 @@ export function CartItem({
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 rounded-l-none"
+              className="h-8 w-8 rounded-l-none rounded-r-[0.125rem]"
               onClick={onIncrease}
               disabled={quantity >= stock}
             >

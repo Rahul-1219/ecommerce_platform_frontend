@@ -121,7 +121,7 @@ export default function OrderHistory({ orders }: { orders: Order[] }) {
   };
 
   return (
-    <Card>
+    <Card className="rounded-[0.125rem]">
       <CardHeader>
         <CardTitle>Order History</CardTitle>
         <CardDescription>Your recent orders and their status</CardDescription>
@@ -138,7 +138,7 @@ export default function OrderHistory({ orders }: { orders: Order[] }) {
               return (
                 <div
                   key={order._id}
-                  className="border rounded-lg p-4 flex flex-col"
+                  className="border rounded-[0.125rem] p-4 flex flex-col"
                 >
                   {/* Header */}
                   <div className="flex items-start justify-between">
@@ -257,7 +257,7 @@ export default function OrderHistory({ orders }: { orders: Order[] }) {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="px-4"
+                      className="px-4 rounded-[0.125rem]"
                       onClick={() => toggleExpand(order._id)}
                     >
                       {isExpanded ? "Hide Details" : "View Details"}

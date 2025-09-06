@@ -49,14 +49,18 @@ export function Hero({ banners }) {
                   <div className="absolute inset-0 bg-black/30" />
                   <div className="container mx-auto px-4 text-left z-10">
                     <div className="max-w-md">
-                      <h1 className="text-3xl sm:text-4xl font-bold text-white">
+                      <h1 className="text-3xl sm:text-4xl font-bold text-white uppercase">
                         {item.title}
                       </h1>
-                      <p className="mt-2 text-sm sm:text-base text-white">
-                        {item.subtitle}
-                      </p>
+                      {item.subtitle && (
+                        <p className="mt-2 text-sm sm:text-base text-white uppercase">
+                          {item.subtitle}
+                        </p>
+                      )}
                       <Link href={`/filter?c=${item.type}`}>
-                        <Button className="mt-4">Shop Now</Button>
+                        <Button className="mt-4 bg-[#fff] text-customBlack uppercase font-bold rounded-none hover:bg-[#dfe0e1]">
+                          Shop Now
+                        </Button>
                       </Link>
                     </div>
                   </div>

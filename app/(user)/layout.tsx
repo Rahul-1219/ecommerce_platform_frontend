@@ -20,7 +20,9 @@ export default async function UserLayout({
   return (
     <UserStoreProvider initialUser={userProfile}>
       <Header />
-      {children}
+      <main className="flex-grow w-full overflow-x-hidden pt-16">
+        {children}
+      </main>
       <Footer />
     </UserStoreProvider>
   );

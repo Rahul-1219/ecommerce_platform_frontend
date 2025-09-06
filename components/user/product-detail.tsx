@@ -208,7 +208,7 @@ const ProductDetail = ({ product }) => {
         <div className="lg:w-1/2">
           <div className="flex justify-between items-start mb-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mt-1">
+              <h1 className="text-3xl font-bold text-customBlack mt-1">
                 {product?.name}
               </h1>
               <span className="text-md text-gray-500">
@@ -249,14 +249,14 @@ const ProductDetail = ({ product }) => {
           </div> */}
 
           {/* Price */}
-          <div className="mb-6 py-4 bg-gray-50 rounded-lg">
+          <div className="mb-6 py-4 px-2 bg-gray-50 rounded-[0.125rem]">
             <div className="flex items-baseline gap-3">
               {hasPrice ? (
-                <span className="text-xl font-bold text-gray-900">
+                <span className="text-xl font-bold text-customBlack">
                   Rs. {currentVariant?.price?.toFixed(2)}
                 </span>
               ) : (
-                <span className="text-xl font-bold text-gray-900">
+                <span className="text-xl font-bold text-customBlack">
                   Rs. {product?.price?.toFixed(2)}
                 </span>
               )}
@@ -324,7 +324,7 @@ const ProductDetail = ({ product }) => {
                       setQuantity(1);
                     }}
                     disabled={!product?.isActive}
-                    className={`py-2 px-3 border rounded-md text-sm font-medium transition-all ${
+                    className={`py-2 px-3 border rounded-[0.125rem] text-sm font-medium transition-all ${
                       selectedSize === size
                         ? "border-blue-500 bg-blue-50 text-blue-700"
                         : "border-gray-300 hover:border-gray-400"
@@ -347,7 +347,7 @@ const ProductDetail = ({ product }) => {
               <button
                 onClick={() => handleQuantityChange(-1)}
                 disabled={quantity <= 1 || isOutOfStock}
-                className="w-10 h-10 border border-gray-300 rounded-l-md flex items-center justify-center disabled:opacity-50 hover:bg-gray-50"
+                className="w-10 h-10 border border-gray-300 rounded-l-[0.125rem] flex items-center justify-center disabled:opacity-50 hover:bg-gray-50"
               >
                 -
               </button>
@@ -359,7 +359,7 @@ const ProductDetail = ({ product }) => {
                 disabled={
                   isOutOfStock || quantity >= (currentVariant?.quantity || 0)
                 }
-                className="w-10 h-10 border border-gray-300 rounded-r-md flex items-center justify-center disabled:opacity-50 hover:bg-gray-50"
+                className="w-10 h-10 border border-gray-300 rounded-r-[0.125rem] flex items-center justify-center disabled:opacity-50 hover:bg-gray-50"
               >
                 +
               </button>
@@ -370,23 +370,23 @@ const ProductDetail = ({ product }) => {
           <div className="flex flex-col sm:flex-row gap-3 mb-8">
             {currentVariant?.isAddedToCart ? (
               <button
-                className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-medium flex-1 flex items-center justify-center gap-2 disabled:opacity-50"
+                className="bg-customBlack hover:bg-[#191919e5] border-2 border-customBlack hover:border-[#191919e5] uppercase text-white py-3 px-6 rounded-[0.125rem] font-medium flex-1 flex items-center justify-center gap-2 disabled:opacity-50"
                 onClick={() => router.push("/cart")}
               >
-                <ShoppingCart className="w-5 h-5" />
+                <ShoppingCart className="w-6 h-6" />
                 Go to Cart
               </button>
             ) : (
               <button
                 disabled={isOutOfStock || isAddingCart || !selectedSize}
-                className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-medium flex-1 flex items-center justify-center gap-2 disabled:opacity-50"
+                className="bg-customBlack hover:bg-[#191919e5] border-2 border-customBlack hover:border-[#191919e5] uppercase text-white py-3 px-6 rounded-[0.125rem] font-medium flex-1 flex items-center justify-center gap-2 disabled:opacity-50"
                 onClick={handleAddToCart}
               >
                 {isAddingCart ? (
                   <Loader2 />
                 ) : (
                   <>
-                    <ShoppingCart className="w-5 h-5" />
+                    <ShoppingCart className="w-6 h-6" />
                     Add to Cart
                   </>
                 )}

@@ -88,26 +88,31 @@ export default function FilterSidebar({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="hidden md:flex justify-between items-center">
+          {/* Reset Button */}
           <button
             type="button"
             onClick={onReset}
             disabled={!hasFilters}
-            className={`text-sm ${
-              hasFilters
-                ? "text-blue-500 hover:underline"
-                : "text-gray-400 cursor-not-allowed"
-            }`}
+            className={`px-4 py-2 text-sm font-medium border uppercase
+              ${
+                hasFilters
+                  ? "border-customBlack bg-white text-customBlack hover:bg-customBlack hover:text-white transition"
+                  : "border-gray-300 bg-white text-gray-400 cursor-not-allowed"
+              }`}
           >
-            Reset All
+            Reset
           </button>
+
+          {/* Apply Button */}
           <button
             type="submit"
             disabled={!hasFilters}
-            className={`text-sm ${
-              hasFilters
-                ? "text-blue-500 hover:underline"
-                : "text-gray-400 cursor-not-allowed"
-            }`}
+            className={`px-4 py-2 text-sm font-medium border uppercase
+                ${
+                  hasFilters
+                    ? "bg-customBlack text-white hover:bg-white hover:text-customBlack hover:border hover:border-customBlack transition"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
           >
             Apply
           </button>
@@ -116,6 +121,7 @@ export default function FilterSidebar({
         <Accordion
           type="multiple"
           defaultValue={["tags", "categories", "price"]}
+          className="text-customBlack"
         >
           {/* Tags Filter */}
           <AccordionItem value="tags">
@@ -138,7 +144,7 @@ export default function FilterSidebar({
                                   field.value?.filter((v) => v !== tag._id)
                                 );
                           }}
-                          className="h-4 w-4"
+                          className="h-4 w-4 rounded-none"
                         />
                       </FormControl>
                       <FormLabel className="text-sm font-normal leading-none">
@@ -194,7 +200,7 @@ export default function FilterSidebar({
                                           )
                                         );
                                   }}
-                                  className="h-4 w-4"
+                                  className="h-4 w-4 rounded-none"
                                 />
                               </FormControl>
                               <FormLabel className="text-sm font-normal leading-none">
@@ -252,14 +258,28 @@ export default function FilterSidebar({
         <div className="md:hidden flex gap-3">
           <Button
             type="button"
-            variant="outline"
-            className="flex-1"
             onClick={onReset}
             disabled={!hasFilters}
+            className={`flex-1 px-4 py-2 text-sm font-medium border uppercase rounded-none
+              ${
+                hasFilters
+                  ? "border-customBlack bg-white text-customBlack hover:bg-customBlack hover:text-white transition"
+                  : "border-gray-300 bg-white text-gray-400 cursor-not-allowed"
+              }`}
           >
             Reset
           </Button>
-          <Button type="submit" className="flex-1" disabled={!hasFilters}>
+
+          <Button
+            type="submit"
+            disabled={!hasFilters}
+            className={`flex-1 px-4 py-2 text-sm font-medium border uppercase rounded-none
+              ${
+                hasFilters
+                  ? "bg-customBlack text-white hover:bg-white hover:text-customBlack hover:border hover:border-customBlack transition"
+                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
+              }`}
+          >
             Apply
           </Button>
         </div>

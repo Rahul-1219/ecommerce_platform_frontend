@@ -93,23 +93,31 @@ export default function Cart({ cart }) {
 
   return (
     <div className="container p-4 py-8">
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+      <div
+        className={`grid grid-cols-1 gap-6 lg:grid-cols-12 ${
+          cartItems.length === 0 ? "lg:grid-cols-12" : "lg:grid-cols-12"
+        }`}
+      >
         {/* Left: Cart Items */}
-        <Card className="lg:col-span-7">
+        <Card
+          className={`${
+            cartItems.length === 0 ? "lg:col-span-12" : "lg:col-span-7"
+          } rounded-[0.125rem]`}
+        >
           <CardHeader>
-            <CardTitle className="text-lg font-bold text-gray-900">
+            <CardTitle className="text-lg font-bold text-customBlack">
               SHOPPING CART
             </CardTitle>
           </CardHeader>
           <CardContent>
             {cartItems.length === 0 ? (
-              <div className="flex h-[60vh] flex-col items-center justify-center text-center space-y-4">
+              <div className="flex w-full h-[60vh] flex-col items-center justify-center text-center space-y-4">
                 <ShoppingCart className="h-12 w-12 text-muted-foreground" />
                 <h3 className="text-xl font-semibold">Your cart is empty</h3>
                 <p className="text-muted-foreground">
                   Start adding some items to your cart
                 </p>
-                <Button asChild className="mt-4">
+                <Button asChild className="mt-4 rounded-[0.125rem]">
                   <Link href="/filter">Browse Products</Link>
                 </Button>
               </div>
@@ -141,9 +149,9 @@ export default function Cart({ cart }) {
             <>
               {/* Address Selection */}
               {user && (
-                <Card>
+                <Card className="rounded-[0.125rem]">
                   <CardHeader>
-                    <CardTitle className="text-lg font-bold text-gray-900">
+                    <CardTitle className="text-lg font-bold text-customBlack">
                       Select Shipping Address
                     </CardTitle>
                     <CardDescription className="text-sm text-gray-600">
@@ -158,7 +166,7 @@ export default function Cart({ cart }) {
                           <div
                             key={addr._id}
                             onClick={() => setSelectedAddressId(addr._id)}
-                            className={`border rounded-lg p-4 cursor-pointer transition ${
+                            className={`border rounded-[0.125rem] p-4 cursor-pointer transition ${
                               selectedAddressId === addr._id
                                 ? "border-blue-500 shadow-lg"
                                 : "border-gray-200"
@@ -200,9 +208,9 @@ export default function Cart({ cart }) {
                   </CardContent>
                 </Card>
               )}
-              <Card>
+              <Card className="rounded-[0.125rem]">
                 <CardHeader>
-                  <CardTitle className="text-lg font-bold text-gray-900">
+                  <CardTitle className="text-lg font-bold text-customBlack">
                     ORDER SUMMARY
                   </CardTitle>
                 </CardHeader>

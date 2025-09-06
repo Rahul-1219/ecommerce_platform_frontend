@@ -1,5 +1,6 @@
 "use client";
 
+import { logOut } from "@/app/(user)/action";
 import {
   Accordion,
   AccordionContent,
@@ -14,6 +15,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+import { useUserStore } from "@/context/user-store";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { CircleUserRound, LogOut, Menu, User, X } from "lucide-react";
@@ -29,8 +31,6 @@ import {
 } from "../ui/dropdown-menu";
 import { CartIcon } from "./cart/cart-icon";
 import { SearchBox } from "./search-box";
-import { logOut } from "@/app/(user)/action";
-import { useUserStore } from "@/context/user-store";
 
 export function HeaderClient({
   categories,
@@ -40,12 +40,7 @@ export function HeaderClient({
 }) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = React.useState(isAuthenticated);
-  const [openCategory, setOpenCategory] = React.useState<string | null>(null);
-  const [isSearchOpen, setIsSearchOpen] = React.useState(false);
   const router = useRouter();
-  const toggleCategory = (categoryId: string) => {
-    setOpenCategory(openCategory === categoryId ? null : categoryId);
-  };
   const { clearUser } = useUserStore();
   React.useEffect(() => {
     setIsLoggedIn(isAuthenticated);
@@ -58,8 +53,8 @@ export function HeaderClient({
     router.push("/login");
   };
   return (
-    <header className="sticky top-0 z-50 bg-white border-b px-4 sm:px-6 md:px-8 lg:px-10">
-      <div className="container flex h-16 items-center justify-between">
+    <header className="fixed top-0 left-0 w-full z-50 bg-customBlack text-[#fff] px-4 sm:px-6 md:px-8 lg:px-10 h-16 md:h-20">
+      <div className="container flex h-full items-center justify-between">
         {/* Logo and Desktop Navigation */}
         <div className="flex items-center gap-8">
           {/* Logo */}
@@ -71,12 +66,19 @@ export function HeaderClient({
           <NavigationMenu className="hidden md:block">
             <NavigationMenuList>
               {categories?.data?.map((category) => (
-                <NavigationMenuItem key={category._id}>
-                  <NavigationMenuTrigger className="capitalize">
+                <NavigationMenuItem key={category._id} className="rounded-none">
+                  <NavigationMenuTrigger
+                    className="uppercase font-bold text-[16px] text-white !bg-transparent 
+             hover:text-white hover:bg-transparent
+             focus:text-white focus:bg-transparent
+             active:text-white active:bg-transparent
+             data-[state=open]:text-white data-[state=open]:bg-transparent"
+                  >
                     {category.name}
                   </NavigationMenuTrigger>
+
                   <NavigationMenuContent>
-                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                    <ul className="grid w-[400px] gap-2 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                       {category?.subcategories?.map((sub) => (
                         <ListItem
                           key={sub._id}
@@ -99,50 +101,51 @@ export function HeaderClient({
         </div>
 
         {/* Search and User Actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3 md:gap-8">
           {/* Desktop Search */}
           <SearchBox products={products?.data} />
-          {/* Mobile Search */}
-          <div className="sm:hidden">
-            <SearchBox
-              isMobile
-              isOpen={isSearchOpen}
-              onOpenChange={setIsSearchOpen}
-              products={products?.data}
-            />
-          </div>
 
           {/* User Actions */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3 md:gap-8">
             {isLoggedIn ? (
               <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <CircleUserRound className="h-5 w-5" />
+                <DropdownMenuTrigger asChild className="cursor-pointer">
+                  <div>
+                    <CircleUserRound className="h-6 w-6" />
                     <span className="sr-only">User Profile</span>
-                  </Button>
+                  </div>
                 </DropdownMenuTrigger>
 
-                <DropdownMenuContent align="end" className="w-40">
-                  <DropdownMenuItem asChild className="cursor-pointer">
+                <DropdownMenuContent
+                  align="end"
+                  className="w-40 rounded-none font-semibold"
+                >
+                  <DropdownMenuItem
+                    asChild
+                    className="cursor-pointer text-[16px]"
+                  >
                     <Link href="/profile" className="flex items-center gap-2">
-                      <User className="h-4 w-4" />
+                      <User className="h-6 w-6" strokeWidth={2.8} />
                       Profile
                     </Link>
                   </DropdownMenuItem>
 
                   <DropdownMenuItem
                     onClick={handleLogout}
-                    className="flex items-center gap-2 cursor-pointer"
+                    className="flex items-center gap-2 cursor-pointer text-[16px]"
                   >
-                    <LogOut className="h-4 w-4" />
+                    <LogOut className="h-6 w-6" strokeWidth={2.8} />
                     Logout
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
               <Link href="/login">
-                <Button variant="ghost" size="sm">
+                <Button
+                  variant="default"
+                  size="sm"
+                  className="text-[#fff] uppercase font-bold !bg-transparent !hover:bg-transparent"
+                >
                   Login
                 </Button>
               </Link>
@@ -150,19 +153,18 @@ export function HeaderClient({
             <CartIcon count={itemCount} />
 
             {/* Mobile Menu Toggle */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
+            <button
+              type="button"
+              className="md:hidden w-10 h-10 p-0 bg-transparent text-white hover:bg-transparent active:bg-transparent focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 flex items-center justify-center cursor-pointer"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             >
               {isMenuOpen ? (
-                <X className="h-5 w-5" />
+                <X className="h-6 w-6" />
               ) : (
-                <Menu className="h-5 w-5" />
+                <Menu className="h-6 w-6" />
               )}
-            </Button>
+            </button>
           </div>
         </div>
 
@@ -174,7 +176,7 @@ export function HeaderClient({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.2 }}
-              className="absolute top-16 left-0 right-0 bg-background border-t shadow-lg md:hidden z-10"
+              className="text-customBlack absolute top-16 left-0 right-0 bg-background border-t shadow-lg md:hidden z-10"
             >
               <div className="p-4">
                 {/* Accordion Menu */}
@@ -189,8 +191,8 @@ export function HeaderClient({
                       value={category._id}
                       className="border-none"
                     >
-                      <AccordionTrigger className="capitalize hover:no-underline py-2">
-                        {category.name}
+                      <AccordionTrigger className="hover:no-underline py-2">
+                        <span className="uppercase">{category.name}</span>
                       </AccordionTrigger>
                       <AccordionContent>
                         <div className="flex flex-col gap-2 pl-4">
@@ -228,14 +230,16 @@ const ListItem = React.forwardRef<
         <a
           ref={ref}
           className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none",
+            "block select-none space-y-1 p-2 leading-none no-underline outline-none",
             "transition-colors hover:bg-accent hover:text-accent-foreground",
             "focus:bg-accent focus:text-accent-foreground",
             className
           )}
           {...props}
         >
-          <div className="text-sm font-medium leading-none">{title}</div>
+          <div className="text-md font-normal leading-none  hover:font-medium">
+            {title}
+          </div>
           <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
             {children}
           </p>

@@ -75,7 +75,7 @@ export function OrderSummary({
     }
   };
   return (
-    <div className="rounded-lg h-full flex flex-col">
+    <div className="rounded-[0.125rem] h-full flex flex-col">
       <div className="mt-6 space-y-4 flex-1">
         <div className="flex items-center justify-between">
           <p className="text-sm font-medium text-gray-600">Subtotal</p>
@@ -110,7 +110,7 @@ export function OrderSummary({
       </div>
 
       <Button
-        className="w-full mt-6"
+        className="w-full mt-6 rounded-[0.125rem]"
         size="lg"
         onClick={handleCheckout}
         disabled={isCheckout}
