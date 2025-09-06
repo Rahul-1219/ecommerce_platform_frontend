@@ -1,7 +1,11 @@
 "use client";
 
-import { Heart, Loader2, Share2, ShoppingCart, Star } from "lucide-react";
-import { useRef, useState, useEffect, useMemo } from "react";
+import { addToCart } from "@/app/(user)/action";
+import { useToast } from "@/hooks/use-toast";
+import { Loader2, ShoppingCart } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
@@ -9,10 +13,6 @@ import "swiper/css/thumbs";
 import "swiper/css/zoom";
 import { FreeMode, Navigation, Thumbs, Zoom } from "swiper/modules";
 import { Swiper, SwiperClass, SwiperSlide } from "swiper/react";
-import { addToCart } from "@/app/(user)/action";
-import { useToast } from "@/hooks/use-toast";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 interface Variant {
   _id: string;
@@ -87,9 +87,16 @@ const ProductDetail = ({ product }) => {
 
   const currentVariant = selectedVariant;
 
+  // Check if out of stock
+  const isOutOfStock = useMemo(() => {
+    if (!product?.isActive) return true;
+    if (!currentVariant) return true;
+    return currentVariant.quantity <= 0;
+  }, [product?.isActive, currentVariant]);
+
   const handleQuantityChange = (value: number) => {
     const newValue = quantity + value;
-    if (newValue >= 1 && newValue <= (currentVariant?.quantity || 1)) {
+    if (newValue >= 1 && newValue <= (currentVariant?.quantity || 0)) {
       setQuantity(newValue);
     }
   };
@@ -201,14 +208,14 @@ const ProductDetail = ({ product }) => {
         <div className="lg:w-1/2">
           <div className="flex justify-between items-start mb-4">
             <div>
-              <span className="text-sm text-gray-500">
-                {product?.categoryId.name}
-              </span>
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mt-1">
+              <h1 className="text-3xl font-bold text-gray-900 mt-1">
                 {product?.name}
               </h1>
+              <span className="text-md text-gray-500">
+                {product?.categoryId.name}
+              </span>
             </div>
-            <div className="flex gap-2">
+            {/* <div className="flex gap-2">
               <button
                 onClick={() => setIsWishlisted(!isWishlisted)}
                 className={`p-2 rounded-full ${
@@ -225,11 +232,11 @@ const ProductDetail = ({ product }) => {
               <button className="p-2 rounded-full text-gray-400 hover:text-gray-600">
                 <Share2 className="w-5 h-5" />
               </button>
-            </div>
+            </div> */}
           </div>
 
           {/* Rating */}
-          <div className="flex items-center mb-6">
+          {/* <div className="flex items-center mb-6">
             <div className="flex text-amber-400">
               {[...Array(5)]?.map((_, i) => (
                 <Star
@@ -239,17 +246,17 @@ const ProductDetail = ({ product }) => {
               ))}
             </div>
             <span className="text-sm text-gray-500 ml-2">(128 reviews)</span>
-          </div>
+          </div> */}
 
           {/* Price */}
-          <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+          <div className="mb-6 py-4 bg-gray-50 rounded-lg">
             <div className="flex items-baseline gap-3">
               {hasPrice ? (
-                <span className="text-3xl font-bold text-gray-900">
+                <span className="text-xl font-bold text-gray-900">
                   Rs. {currentVariant?.price?.toFixed(2)}
                 </span>
               ) : (
-                <span className="text-3xl font-bold text-gray-900">
+                <span className="text-xl font-bold text-gray-900">
                   Rs. {product?.price?.toFixed(2)}
                 </span>
               )}
@@ -336,9 +343,10 @@ const ProductDetail = ({ product }) => {
           <div className="mb-8">
             <h3 className="text-sm font-medium text-gray-900 mb-2">Quantity</h3>
             <div className="flex items-center max-w-xs">
+              {/* Decrease Button */}
               <button
                 onClick={() => handleQuantityChange(-1)}
-                disabled={quantity <= 1 || !product?.isActive}
+                disabled={quantity <= 1 || isOutOfStock}
                 className="w-10 h-10 border border-gray-300 rounded-l-md flex items-center justify-center disabled:opacity-50 hover:bg-gray-50"
               >
                 -
@@ -349,10 +357,7 @@ const ProductDetail = ({ product }) => {
               <button
                 onClick={() => handleQuantityChange(1)}
                 disabled={
-                  quantity >=
-                    (currentVariant
-                      ? currentVariant?.quantity
-                      : product?.quantity || 1) || !product?.isActive
+                  isOutOfStock || quantity >= (currentVariant?.quantity || 0)
                 }
                 className="w-10 h-10 border border-gray-300 rounded-r-md flex items-center justify-center disabled:opacity-50 hover:bg-gray-50"
               >
@@ -373,10 +378,7 @@ const ProductDetail = ({ product }) => {
               </button>
             ) : (
               <button
-                disabled={
-                  (!selectedSize || !product?.isActive || isAddingCart) &&
-                  product?.productVariants.length !== 0
-                }
+                disabled={isOutOfStock || isAddingCart || !selectedSize}
                 className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-medium flex-1 flex items-center justify-center gap-2 disabled:opacity-50"
                 onClick={handleAddToCart}
               >
@@ -390,16 +392,6 @@ const ProductDetail = ({ product }) => {
                 )}
               </button>
             )}
-
-            <button
-              disabled={
-                (!selectedSize || !product?.isActive) &&
-                product?.productVariants.length !== 0
-              }
-              className="bg-gray-900 hover:bg-gray-800 text-white py-3 px-6 rounded-lg font-medium flex-1 disabled:opacity-50"
-            >
-              Buy Now
-            </button>
           </div>
 
           {/* Description */}

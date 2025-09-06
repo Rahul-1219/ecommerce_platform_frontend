@@ -38,7 +38,7 @@ export function OrderSummary({
   const handleCheckout = async () => {
     try {
       if (!isLogin) {
-        router.push("/login");
+        router.push("/login?r=/cart");
         return;
       }
       if (!cartItems || cartItems.length === 0) return;

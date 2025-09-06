@@ -12,14 +12,18 @@ const Page = () => {
   const router = useRouter();
   const sessionId = searchParams.get("session_id");
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<"success" | "failed" | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!sessionId) {
+      router.replace("/");
+      return;
+    }
     async function verifyPayment() {
-      if (!sessionId) return;
       try {
+        setLoading(true);
         const res = await verifyStripePayment({ sessionId });
         if (res?.status) {
           setStatus("success");
@@ -53,6 +57,7 @@ const Page = () => {
             Payment Verification
           </CardTitle>
         </CardHeader>
+
         <CardContent className="flex flex-col items-center space-y-6">
           {loading && (
             <div className="flex flex-col items-center">
@@ -67,13 +72,13 @@ const Page = () => {
             <div className="flex flex-col items-center">
               <CheckCircle2 className="h-14 w-14 text-green-600 mb-3" />
               <h2 className="text-xl font-semibold text-green-700">
-                Payment Successful 🎉
+                Payment Successful
               </h2>
               <p className="text-gray-600 text-center mt-2">
                 Your payment has been verified. Redirecting...
               </p>
               <p className="text-sm text-gray-500 mt-2 text-center">
-                ⚠️ Please don’t close this tab, browser, or window until the
+                Please don’t close this tab, browser, or window until the
                 process is complete.
               </p>
             </div>
