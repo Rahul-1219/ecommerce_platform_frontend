@@ -70,7 +70,7 @@ export function SearchBox({ products = [] }: SearchBoxProps) {
                 />
                 {query && (
                   <span
-                    className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-customBlack underline underline-offset-4 font-bold uppercase text-xs sm:text-sm"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-customBlack underline underline-offset-4 decoration-2 font-bold uppercase text-xs sm:text-sm"
                     onClick={clearSearch}
                   >
                     Clear

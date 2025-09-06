@@ -1,5 +1,6 @@
 "use client";
 
+import { logOut } from "@/app/(user)/action";
 import {
   Accordion,
   AccordionContent,
@@ -14,6 +15,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+import { useUserStore } from "@/context/user-store";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { CircleUserRound, LogOut, Menu, User, X } from "lucide-react";
@@ -29,8 +31,6 @@ import {
 } from "../ui/dropdown-menu";
 import { CartIcon } from "./cart/cart-icon";
 import { SearchBox } from "./search-box";
-import { logOut } from "@/app/(user)/action";
-import { useUserStore } from "@/context/user-store";
 
 export function HeaderClient({
   categories,
@@ -40,12 +40,7 @@ export function HeaderClient({
 }) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = React.useState(isAuthenticated);
-  const [openCategory, setOpenCategory] = React.useState<string | null>(null);
-  const [isSearchOpen, setIsSearchOpen] = React.useState(false);
   const router = useRouter();
-  const toggleCategory = (categoryId: string) => {
-    setOpenCategory(openCategory === categoryId ? null : categoryId);
-  };
   const { clearUser } = useUserStore();
   React.useEffect(() => {
     setIsLoggedIn(isAuthenticated);
@@ -73,11 +68,15 @@ export function HeaderClient({
               {categories?.data?.map((category) => (
                 <NavigationMenuItem key={category._id} className="rounded-none">
                   <NavigationMenuTrigger
-                    className="uppercase font-bold text-[16px] !bg-transparent !hover:bg-transparent hover:!text-[#fff]  data-[state=open]:text-white 
-    data-[state=open]:bg-transparent"
+                    className="uppercase font-bold text-[16px] text-white !bg-transparent 
+             hover:text-white hover:bg-transparent
+             focus:text-white focus:bg-transparent
+             active:text-white active:bg-transparent
+             data-[state=open]:text-white data-[state=open]:bg-transparent"
                   >
                     {category.name}
                   </NavigationMenuTrigger>
+
                   <NavigationMenuContent>
                     <ul className="grid w-[400px] gap-2 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                       {category?.subcategories?.map((sub) => (

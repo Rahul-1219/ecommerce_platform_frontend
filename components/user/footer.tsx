@@ -1,6 +1,8 @@
+import Link from "next/link";
+
 export function Footer() {
   return (
-    <footer className="bg-black text-gray-300 mt-auto px-4 sm:px-6 md:px-8 lg:px-10">
+    <footer className="bg-customBlack text-gray-300 mt-auto px-4 sm:px-6 md:px-8 lg:px-10">
       <div className="container mx-auto py-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand Info */}
@@ -60,29 +62,28 @@ export function Footer() {
             <h3 className="text-white text-lg font-semibold">Shop</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="/men" className="hover:text-white transition">
+                <Link
+                  href="/filter?c=men"
+                  className="hover:text-white transition"
+                >
                   Men's Clothing
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/women" className="hover:text-white transition">
+                <Link
+                  href="/filter?c=women"
+                  className="hover:text-white transition"
+                >
                   Women's Clothing
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/kids" className="hover:text-white transition">
+                <Link
+                  href="/filter?c=kids"
+                  className="hover:text-white transition"
+                >
                   Kids Collection
-                </a>
-              </li>
-              <li>
-                <a href="/new-arrivals" className="hover:text-white transition">
-                  New Arrivals
-                </a>
-              </li>
-              <li>
-                <a href="/sale" className="hover:text-white transition">
-                  Sale & Offers
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -94,27 +95,27 @@ export function Footer() {
             </h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="/contact" className="hover:text-white transition">
+                <a href="/#" className="hover:text-white transition">
                   Contact Us
                 </a>
               </li>
               <li>
-                <a href="/faq" className="hover:text-white transition">
+                <a href="/#" className="hover:text-white transition">
                   FAQs
                 </a>
               </li>
               <li>
-                <a href="/shipping" className="hover:text-white transition">
+                <a href="/#" className="hover:text-white transition">
                   Shipping Policy
                 </a>
               </li>
               <li>
-                <a href="/returns" className="hover:text-white transition">
+                <a href="/#" className="hover:text-white transition">
                   Returns & Exchanges
                 </a>
               </li>
               <li>
-                <a href="/size-guide" className="hover:text-white transition">
+                <a href="/#" className="hover:text-white transition">
                   Size Guide
                 </a>
               </li>
@@ -128,13 +129,13 @@ export function Footer() {
             © {new Date().getFullYear()} MyStore. All rights reserved.
           </div>
           <div className="flex flex-wrap justify-center gap-4 text-sm">
-            <a href="/privacy" className="hover:text-white transition">
+            <a href="/#" className="hover:text-white transition">
               Privacy Policy
             </a>
-            <a href="/terms" className="hover:text-white transition">
+            <a href="/#" className="hover:text-white transition">
               Terms of Service
             </a>
-            <a href="/cookies" className="hover:text-white transition">
+            <a href="/#" className="hover:text-white transition">
               Cookie Policy
             </a>
           </div>

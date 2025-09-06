@@ -39,11 +39,13 @@ const ProductList: React.FC<ProductListProps> = ({
     <div className="container p-4 sm:p-6 my-6 sm:my-8 bg-gray-50">
       <div className="flex justify-between items-center mb-4 sm:mb-6">
         {/* Responsive title text */}
-        <h2 className="text-lg sm:text-xl md:text-2xl font-bold">{title}</h2>
+        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-customBlack uppercase">
+          {title}
+        </h2>
         {showAllButton && (
           <Link
             href={`/filter?t=${tagId}`}
-            className="text-primary hover:underline text-sm sm:text-base"
+            className="hover:underline hover:underline-offset-4 hover:decoration-2 text-sm uppercase font-semibold"
           >
             Show all
           </Link>

@@ -170,7 +170,7 @@ export default function ProductListing({
   };
 
   return (
-    <div className="container mx-auto px-4  py-8 sm:px-6 md:px-8 lg:px-10">
+    <div className="container mx-auto px-4 py-20 sm:px-6 md:px-8 lg:px-10">
       {/* Desktop Layout */}
       <div className="hidden md:flex">
         {/* Filters Sidebar - Fixed position */}
@@ -206,15 +206,16 @@ export default function ProductListing({
 
           {/* Show More button for desktop */}
           {pagination.hasNextPage ? (
-            <div className="flex justify-center">
+            <div className="flex justify-center mt-2">
               {loading ? (
                 <Loader className="h-6 w-6 animate-spin" />
               ) : (
                 <Button
-                  variant="link"
+                  variant="outline"
+                  size="sm"
                   disabled={loading}
                   onClick={handleLoadMore}
-                  className="min-w-32 text-blue-800"
+                  className="text-customBlack border-2 border-customBlack rounded-none uppercase hover:bg-customBlack hover:text-[#fff]"
                 >
                   Show More
                 </Button>
