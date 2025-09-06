@@ -24,7 +24,7 @@ import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Loader2Icon } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -50,6 +50,7 @@ export function LoginForm({
   const router = useRouter();
   const { toast } = useToast();
   const { refreshUserStore } = useUserStore();
+  const searchParams = useSearchParams();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -80,7 +81,8 @@ export function LoginForm({
         }
       } else if (response.status == 1) {
         refreshUserStore();
-        router.push("/");
+        const redirect = searchParams.get("r") || "/";
+        router.push(redirect);
       } else {
         throw new Error(response.message);
       }
