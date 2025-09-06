@@ -3,8 +3,9 @@
 import { Search, X } from "lucide-react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Product {
   _id: string;
@@ -12,170 +13,105 @@ interface Product {
 }
 
 interface SearchBoxProps {
-  isMobile?: boolean;
-  isOpen?: boolean;
-  onOpenChange?: (isOpen: boolean) => void;
   products?: Product[];
 }
 
-export function SearchBox({
-  isMobile,
-  isOpen,
-  onOpenChange,
-  products = [],
-}: SearchBoxProps) {
+export function SearchBox({ products = [] }: SearchBoxProps) {
+  const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [showResults, setShowResults] = useState(false);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-  const searchRef = useRef<HTMLDivElement>(null);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Local search function
-  const searchProducts = (searchQuery: string) => {
-    const query = searchQuery.trim();
+  useEffect(() => {
     if (!query) {
-      setFilteredProducts([]);
-      return;
+      setFilteredProducts(products);
+    } else {
+      const q = query.trim().toLowerCase();
+      const results = products.filter((product) =>
+        product.name.toLowerCase().includes(q)
+      );
+      setFilteredProducts(results);
     }
-
-    const parts = query
-      .toLowerCase()
-      .split(/[^\w]+/)
-      .filter((part) => part.length > 0);
-
-    if (parts.length === 0) {
-      setFilteredProducts([]);
-      return;
-    }
-
-    const results = products.filter((product) => {
-      const normalizedName = product.name.toLowerCase().replace(/[^\w]/g, "");
-
-      // OR logic: At least one part must match
-      return parts.some((part) => normalizedName.includes(part));
-    });
-
-    setFilteredProducts(results);
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
-        setShowResults(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  useEffect(() => {
-    if (timerRef.current) clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => {
-      searchProducts(query);
-      setShowResults(query.length > 0);
-    }, 300);
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
   }, [query, products]);
 
   const clearSearch = () => {
     setQuery("");
-    setFilteredProducts([]);
-    setShowResults(false);
+    setFilteredProducts(products);
   };
 
-  const SearchResults = () => (
-    <div className="absolute left-0 right-0 top-full mt-1 bg-white border rounded-md shadow-lg max-h-80 overflow-y-auto z-50">
-      {filteredProducts.length > 0 ? (
-        filteredProducts.map((product) => (
-          <Link
-            key={product._id}
-            href={`/product/${product._id}`}
-            className="block p-3 hover:bg-gray-50"
-            onClick={() => {
-              setShowResults(false);
-              onOpenChange?.(false);
-            }}
-          >
-            {product.name}
-          </Link>
-        ))
-      ) : query ? (
-        <></>
-      ) : null}
-    </div>
-  );
-
-  if (isMobile) {
-    return !isOpen ? (
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => onOpenChange?.(true)}
-        aria-label="Open search"
-      >
-        <Search className="h-5 w-5" />
-      </Button>
-    ) : (
-      <div
-        className="absolute inset-0 bg-background z-50 flex items-center px-4 gap-2"
-        ref={searchRef}
-      >
-        <div className="relative flex-1">
-          <Input
-            type="text"
-            placeholder="Search products..."
-            className="w-full h-9 pl-9 pr-9"
-            autoFocus
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          {query && (
-            <X
-              className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 cursor-pointer"
-              onClick={clearSearch}
-            />
-          )}
-          {showResults && <SearchResults />}
-        </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => {
-            onOpenChange?.(false);
-            clearSearch();
-          }}
-          aria-label="Close search"
-        >
-          <X className="h-5 w-5" />
-        </Button>
-      </div>
-    );
-  }
-
   return (
-    <div
-      className="relative w-64 md:w-80 lg:w-96 hidden sm:block"
-      ref={searchRef}
-    >
-      <Input
-        type="text"
-        placeholder="Search products..."
-        className="h-9 pl-9 pr-9"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        onFocus={() => query && setShowResults(true)}
-      />
-      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-      {query && (
-        <X
-          className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 cursor-pointer"
-          onClick={clearSearch}
-        />
-      )}
-      {showResults && <SearchResults />}
-    </div>
+    <>
+      {!isOpen ? (
+        <button onClick={() => setIsOpen(true)} aria-label="Open search">
+          <Search className="h-6 w-6 text-white" />
+        </button>
+      ) : null}
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            className="fixed inset-0 z-50 flex flex-col bg-white px-4 pt-4"
+            initial={{ y: "-100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "-100%" }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+          >
+            {/* Search Bar */}
+            <div className="flex items-center w-full max-w-3xl mx-auto gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
+                <Input
+                  type="text"
+                  placeholder="Search products..."
+                  className="w-full h-12 pl-10 pr-10 border border-gray-300 bg-white text-customBlack font-medium 
+                             focus:outline-none focus:ring-2 focus:ring-slate-400 rounded-none"
+                  autoFocus
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                />
+                {query && (
+                  <span
+                    className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-customBlack underline underline-offset-4 font-bold uppercase text-xs sm:text-sm"
+                    onClick={clearSearch}
+                  >
+                    Clear
+                  </span>
+                )}
+              </div>
+
+              {/* Close Button OUTSIDE search bar */}
+              <button
+                className="text-customBlack"
+                onClick={() => {
+                  setIsOpen(false);
+                  clearSearch();
+                }}
+              >
+                <X className="h-7 w-7 sm:h-8 sm:w-8" />
+              </button>
+            </div>
+
+            {/* Product Results */}
+            <div className="mt-4 w-full max-w-3xl mx-auto flex-1 overflow-y-auto scrollbar-hide">
+              {filteredProducts.length > 0 ? (
+                filteredProducts.map((product) => (
+                  <Link
+                    key={product._id}
+                    href={`/product/${product._id}`}
+                    className="block p-3 text-customBlack hover:bg-gray-100 font-normal text-sm md:text-lg"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {product.name}
+                  </Link>
+                ))
+              ) : (
+                <div className="p-3 text-gray-500 text-sm sm:text-base">
+                  No products found
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
