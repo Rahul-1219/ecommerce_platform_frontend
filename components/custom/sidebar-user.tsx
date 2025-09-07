@@ -1,13 +1,12 @@
+import { logOut } from "@/app/admin/action";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import {
-  DropdownMenuGroup,
-  DropdownMenuSeparator,
-} from "@radix-ui/react-dropdown-menu";
-import { Bell, ChevronsUpDown, LogOut, Settings } from "lucide-react";
+import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
+import { ChevronsUpDown, LogOut } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
   DropdownMenu,
@@ -16,9 +15,16 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { logOut } from "@/app/admin/action";
 
 const SidebarUser = ({ userData }: { userData: any }) => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   const handleLogout = async () => {
     // Clear token from local storage and log out user
     await logOut();
@@ -45,9 +51,9 @@ const SidebarUser = ({ userData }: { userData: any }) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-            side="right"
-            align="end"
-            sideOffset={4}
+            side={isMobile ? "top" : "right"}
+            align={isMobile ? "center" : "end"}
+            sideOffset={isMobile ? 8 : 4}
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
@@ -64,19 +70,6 @@ const SidebarUser = ({ userData }: { userData: any }) => {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem className="cursor-pointer">
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem className="cursor-pointer">
-                <Settings />
-                Settings
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>
               <LogOut />

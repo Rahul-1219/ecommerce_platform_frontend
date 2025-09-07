@@ -21,6 +21,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ModeToggle } from "./mode-toggle";
 import SidebarUser from "./sidebar-user";
+import { DialogTitle } from "../ui/dialog";
 
 // Menu items.
 const items = [
@@ -54,12 +55,16 @@ const items = [
 export function AdminSidebar({ userData }: { userData: any }) {
   const pathname = usePathname();
   return (
-    <Sidebar collapsible="icon" variant="floating">
+    <Sidebar
+      collapsible="icon"
+      variant="floating"
+      aria-label="Sidebar navigation"
+    >
       <SidebarContent>
         <SidebarGroup>
           <div className="flex justify-between pb-2">
             <SidebarGroupLabel>Administration</SidebarGroupLabel>
-            <ModeToggle />
+            {/* <ModeToggle /> */}
           </div>
           <SidebarGroupContent>
             <SidebarMenu>

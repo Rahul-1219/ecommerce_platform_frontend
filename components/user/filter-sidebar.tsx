@@ -228,8 +228,8 @@ export default function FilterSidebar({
                   <FormItem className="space-y-3">
                     <FormControl>
                       <RadioGroup
+                        value={field.value || ""}
                         onValueChange={field.onChange}
-                        defaultValue={field.value || ""}
                         className="flex flex-col space-y-3"
                       >
                         {filterOptions.price.map((priceOption) => (

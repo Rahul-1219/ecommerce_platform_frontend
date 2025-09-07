@@ -63,7 +63,9 @@ const LoginForm: React.FC = () => {
     <div className="flex min-h-screen items-center justify-center">
       <Card className="w-full max-w-md p-4">
         <CardHeader>
-          <CardTitle className="text-center text-2xl">Login</CardTitle>
+          <CardTitle className="text-center text-2xl">
+            Admin Panel Login
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -124,7 +126,7 @@ const LoginForm: React.FC = () => {
               />
               {!showLoaderBtn ? (
                 /* Submit Button */
-                <Button type="submit" className="w-full">
+                <Button type="submit" className="w-full uppercase">
                   Log In
                 </Button>
               ) : (

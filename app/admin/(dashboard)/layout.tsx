@@ -5,10 +5,6 @@ import { BreadcrumbWithCustomSeparator } from "@/components/custom/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { cookies } from "next/headers";
 
-export const metadata: Metadata = {
-  title: "Dashboard",
-};
-
 export default async function DashboardLayout({
   children,
 }: {
