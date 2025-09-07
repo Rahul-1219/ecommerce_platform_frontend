@@ -182,7 +182,8 @@ export default function OrderHistory({ orders }: { orders: Order[] }) {
                             >
                               <div className="flex items-center gap-3">
                                 <Image
-                                  fill
+                                  height={64}
+                                  width={64}
                                   src={
                                     item.productId.images?.[0]?.image ||
                                     "/placeholder.png"
