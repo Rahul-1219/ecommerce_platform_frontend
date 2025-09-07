@@ -1,13 +1,14 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle2, Loader2, XCircle } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { verifyStripePayment } from "../(user)/action";
 
-const Page = () => {
+const PaymentSuccess = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const sessionId = searchParams.get("session_id");
@@ -110,4 +111,12 @@ const Page = () => {
   );
 };
 
-export default Page;
+const PaymentSuccessPage = () => {
+  return (
+    <Suspense>
+      <PaymentSuccess />
+    </Suspense>
+  );
+};
+
+export default PaymentSuccessPage;

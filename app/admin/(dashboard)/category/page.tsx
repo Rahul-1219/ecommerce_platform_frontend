@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { getCategories } from "../../action";
 import CategoryDataTable from "./data-table";
 

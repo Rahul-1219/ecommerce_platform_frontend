@@ -31,7 +31,6 @@ const ProductDetail = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
-  const [isWishlisted, setIsWishlisted] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null);
   const [isAddingCart, setIsAddingCart] = useState(false);
 
@@ -161,8 +160,8 @@ const ProductDetail = ({ product }) => {
                         Out of Stock
                       </span>
                     )}
-                    {currentVariant?.quantity! < 5 &&
-                      currentVariant?.quantity! > 0 && (
+                    {(currentVariant?.quantity ?? 0) < 5 &&
+                      (currentVariant?.quantity ?? 0) > 0 && (
                         <span className="bg-amber-100 text-amber-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
                           Low Stock
                         </span>
@@ -262,7 +261,7 @@ const ProductDetail = ({ product }) => {
               )}
             </div>
             <div className="mt-2 text-sm text-gray-600">
-              {currentVariant?.quantity! > 0 ? (
+              {currentVariant?.quantity ?? 0 > 0 ? (
                 <span className="text-green-600 font-medium">
                   {currentVariant?.quantity} available
                 </span>

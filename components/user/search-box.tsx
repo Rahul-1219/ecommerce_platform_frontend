@@ -1,11 +1,10 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
 import { Search, X } from "lucide-react";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
+import { Input } from "../ui/input";
 
 interface Product {
   _id: string;

@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { getCategoryDetail } from "@/app/admin/action";
 import CategoryDataTable from "../data-table";
 

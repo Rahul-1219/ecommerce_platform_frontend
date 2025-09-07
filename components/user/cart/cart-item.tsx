@@ -1,11 +1,10 @@
 // components/cart/CartItem.tsx
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import { Minus, Plus, Trash2 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 interface CartItemProps {
-  id: string;
   productId: string;
   name: string;
   price: number;
@@ -20,7 +19,6 @@ interface CartItemProps {
 }
 
 export function CartItem({
-  id,
   productId,
   name,
   price,
