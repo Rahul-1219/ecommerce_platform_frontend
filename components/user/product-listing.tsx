@@ -58,7 +58,6 @@ interface FiltersState {
   price: string;
   [key: string]: any; // Index signature for dynamic access
 }
-
 export default function ProductListing({
   filterOptions,
   initialProducts,
@@ -105,9 +104,9 @@ export default function ProductListing({
   );
 
   useEffect(() => {
-    const tags = searchParams.getAll("t"); // if you're using ?t=...&t=... for multiple tags
+    const tags = searchParams.getAll("t");
     const category = searchParams.get("c");
-    const sub = searchParams.getAll("s"); // same for subcategories
+    const sub = searchParams.getAll("s");
     const price = searchParams.get("price");
 
     const urlFilters: FiltersState = {
@@ -119,26 +118,22 @@ export default function ProductListing({
 
     setFilters(urlFilters);
     loadProducts(1, true, urlFilters);
-  }, [searchParams, loadProducts]);
+  }, [searchParams]); // Removed loadProducts from dependencies
 
   const handleApplyFilters = useCallback(
     (newFilters: Partial<FiltersState>) => {
-      setFilters((prev) => ({
-        ...prev,
+      const updatedFilters = {
+        ...filters,
         ...newFilters,
-      }));
-      newFilters.category = defaultFilters.category;
-      // Use setTimeout to ensure state is updated before loading products
-      loadProducts(1, true, newFilters);
+        category: defaultFilters.category,
+      };
+
+      setFilters(updatedFilters);
+      loadProducts(1, true, updatedFilters);
       setMobileFilterOpen(false);
     },
-    [loadProducts, defaultFilters.category]
+    [filters, loadProducts, defaultFilters.category]
   );
-
-  // Reset products when filters change (for initial load)
-  useEffect(() => {
-    loadProducts(1, true);
-  }, [loadProducts]); // Empty dependency array to run only once on mount
 
   // Infinite scroll for mobile
   useEffect(() => {
@@ -152,17 +147,20 @@ export default function ProductListing({
     }
   }, [inView, loading, pagination, loadProducts]);
 
-  const handleLoadMore = () => {
+  const handleLoadMore = useCallback(() => {
     if (!loading && pagination.hasNextPage) {
       loadProducts(pagination.currentPage + 1);
     }
-  };
+  }, [loading, pagination, loadProducts]);
 
-  const handleResetFilters = (filters) => {
-    router.push("/filter");
-    setFilters(filters);
-    loadProducts(1, true, filters);
-  };
+  const handleResetFilters = useCallback(
+    (resetFilters: any) => {
+      router.push("/filter");
+      setFilters(resetFilters);
+      loadProducts(1, true, resetFilters);
+    },
+    [router, loadProducts]
+  );
 
   return (
     <div className="container mx-auto px-4 py-20 sm:px-6 md:px-8 lg:px-10">
