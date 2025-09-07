@@ -73,3 +73,4 @@ export const DrawerDialog = React.forwardRef(
     );
   }
 );
+DrawerDialog.displayName = "DrawerDialog";

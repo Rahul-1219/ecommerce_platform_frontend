@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,6 +10,8 @@ import {
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import Image from "next/image";
+import { useMemo, useState } from "react";
 import { OrderStatus } from "../user/order-status";
 
 interface ProductImage {
@@ -180,7 +181,8 @@ export default function OrderHistory({ orders }: { orders: Order[] }) {
                               className="flex items-center justify-between text-sm border-b pb-3 last:border-0"
                             >
                               <div className="flex items-center gap-3">
-                                <img
+                                <Image
+                                  fill
                                   src={
                                     item.productId.images?.[0]?.image ||
                                     "/placeholder.png"

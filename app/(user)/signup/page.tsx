@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { SignupForm } from "@/components/forms/signup-form";
 
 export default function Page() {

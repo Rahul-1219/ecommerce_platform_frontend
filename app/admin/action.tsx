@@ -1,7 +1,6 @@
 "use server";
 import { IDeleteProductImage } from "@/components/custom/image-scrollarea";
 import { getExpirationTime, getTokenFromCookies } from "@/utils/auth";
-import { LoginSchema } from "@/schemas/auth";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";

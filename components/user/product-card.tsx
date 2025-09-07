@@ -1,27 +1,11 @@
 "use client";
 
-import React from "react";
 import Image from "next/image";
-
-interface ProductCardProps {
-  id: string;
-  name: string;
-  description: string;
-  price: string | number;
-  originalPrice?: string | number;
-  discount?: number | string;
-  category?: string;
-  imageUrl?: string;
-  isCompact?: boolean; // used for Swiper cards
-}
-
+import React from "react";
 const ProductCard: React.FC<any> = ({
   name,
   description,
   price,
-  originalPrice,
-  discount,
-  category,
   imageUrl,
   isCompact = false,
 }) => {

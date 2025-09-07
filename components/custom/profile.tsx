@@ -27,59 +27,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useUserStore } from "@/context/user-store";
 import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import OrderHistory from "../common/order-history";
-import { Loader2 } from "lucide-react";
 
-// Mock user data
-const user = {
-  addresses: [
-    {
-      _id: "1",
-      street: "123 Main St",
-      city: "New York",
-      state: "NY",
-      pincode: "10001",
-      country: "USA",
-      isDefault: true,
-    },
-    {
-      _id: "2",
-      street: "456 Oak Ave",
-      city: "Brooklyn",
-      state: "NY",
-      pincode: "11201",
-      country: "USA",
-      isDefault: false,
-    },
-  ],
-  recentOrders: [
-    {
-      id: "ORD-12345",
-      date: "2023-10-15",
-      status: "delivered",
-      items: 3,
-      total: 149.99,
-    },
-    {
-      id: "ORD-12344",
-      date: "2023-09-28",
-      status: "shipped",
-      items: 2,
-      total: 89.99,
-    },
-    {
-      id: "ORD-12343",
-      date: "2023-09-10",
-      status: "processing",
-      items: 1,
-      total: 49.99,
-    },
-  ],
-};
 // Form schemas
 const profileFormSchema = z.object({
   name: z.string().min(2, {
@@ -292,25 +246,28 @@ export default function Profile({ orders }) {
     setAddresses((prev) => prev.filter((addr) => addr._id !== id));
     setIsAddressUpdate(true);
   }
-
-  async function updateAddresses(data) {
-    try {
-      const formData = new FormData();
-      formData.append("addresses", JSON.stringify(data));
-      const response = await updateProfile(formData);
-      if (!response.status) throw new Error(response.message);
-      updateUser({ addresses: response.data.addresses || data });
-    } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: error.message,
-        duration: 2000,
-      });
-    }
-  }
+  const updateAddresses = useCallback(
+    async (data) => {
+      try {
+        const formData = new FormData();
+        formData.append("addresses", JSON.stringify(data));
+        const response = await updateProfile(formData);
+        if (!response.status) throw new Error(response.message);
+        updateUser({ addresses: response.data.addresses || data });
+      } catch (error: any) {
+        toast({
+          variant: "destructive",
+          title: error.message,
+          duration: 2000,
+        });
+      }
+    },
+    [toast, updateUser]
+  );
 
   useEffect(() => {
     if (isAddressUpdate) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const cleanedAddresses = addresses.map(({ _id, ...rest }) => rest);
       updateAddresses(cleanedAddresses);
       setIsAddressUpdate(false);

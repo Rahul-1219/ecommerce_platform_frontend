@@ -59,7 +59,7 @@ export async function checkAndCreateSessionId() {
     cookieStore.set("sessionId", sessionId, {
       maxAge: 60 * 60 * 24 * 30, // 1 month in seconds
       httpOnly: false,
-      secure: process.env.NODE_ENV === "production",
+      secure: false,
       path: "/",
     });
   }
@@ -69,6 +69,6 @@ export async function checkAndCreateSessionId() {
 
 export const getSessionId = async () => {
   const cookieStore = await cookies();
-  const token = cookieStore.get("sessionId")?.value;
-  return token ? token : "";
+  const sessionId = cookieStore.get("sessionId")?.value;
+  return sessionId ? sessionId : "";
 };

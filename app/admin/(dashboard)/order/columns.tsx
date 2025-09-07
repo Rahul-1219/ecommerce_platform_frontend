@@ -37,6 +37,45 @@ const statusColors: Record<string, string> = {
   returned: "bg-pink-200 text-pink-900 hover:bg-pink-300 hover:text-pink-950",
 };
 
+// Separate component for Action cell to use hooks safely
+const ActionCell = ({ order }: { order: Order }) => {
+  const drawerRef = useRef<any>(null);
+
+  const closeDrawer = () => {
+    drawerRef.current?.close();
+  };
+
+  const terminalStatuses = ["pending", "delivered", "cancelled", "returned"];
+  const isTerminal = terminalStatuses.includes(order.status);
+
+  if (isTerminal) {
+    return (
+      <RefreshCcw size={22} strokeWidth={1.25} className="text-gray-400" />
+    );
+  }
+
+  return (
+    <DrawerDialog
+      ref={drawerRef}
+      title="Update Order Status"
+      rowText="Update"
+      button={
+        <RefreshCcw
+          size={22}
+          strokeWidth={1.25}
+          className="cursor-pointer text-blue-600"
+        />
+      }
+    >
+      <OrderStatusForm
+        orderId={order._id}
+        currentStatus={order.status}
+        onClose={closeDrawer}
+      />
+    </DrawerDialog>
+  );
+};
+
 export const columns: ColumnDef<Order>[] = [
   {
     accessorKey: "userId.name",
@@ -104,45 +143,6 @@ export const columns: ColumnDef<Order>[] = [
   {
     accessorKey: "Action",
     header: "Action",
-    cell: ({ row }) => {
-      const order = row.original;
-      const drawerRef = useRef<any>(null);
-
-      const closeDrawer = () => {
-        if (drawerRef.current) {
-          drawerRef.current.close();
-        }
-      };
-
-      const terminalStatuses = ["delivered", "cancelled", "returned"];
-      const isTerminal = terminalStatuses.includes(order.status);
-
-      if (isTerminal) {
-        return (
-          <RefreshCcw size={22} strokeWidth={1.25} className="text-gray-400" />
-        );
-      }
-
-      return (
-        <DrawerDialog
-          ref={drawerRef}
-          title="Update Order Status"
-          rowText="Update"
-          button={
-            <RefreshCcw
-              size={22}
-              strokeWidth={1.25}
-              className="cursor-pointer text-blue-600"
-            />
-          }
-        >
-          <OrderStatusForm
-            orderId={order._id}
-            currentStatus={order.status}
-            onClose={closeDrawer}
-          />
-        </DrawerDialog>
-      );
-    },
+    cell: ({ row }) => <ActionCell order={row.original} />,
   },
 ];

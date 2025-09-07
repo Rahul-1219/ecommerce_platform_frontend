@@ -138,11 +138,13 @@ export default function FilterSidebar({
                         <Checkbox
                           checked={field.value?.includes(tag._id)}
                           onCheckedChange={(checked) => {
-                            checked
-                              ? field.onChange([...field.value, tag._id])
-                              : field.onChange(
-                                  field.value?.filter((v) => v !== tag._id)
-                                );
+                            if (checked) {
+                              field.onChange([...field.value, tag._id]);
+                            } else {
+                              field.onChange(
+                                field.value?.filter((v) => v !== tag._id)
+                              );
+                            }
                           }}
                           className="h-4 w-4 rounded-none"
                         />
@@ -189,16 +191,18 @@ export default function FilterSidebar({
                                     subcategory._id
                                   )}
                                   onCheckedChange={(checked) => {
-                                    checked
-                                      ? field.onChange([
-                                          ...field.value,
-                                          subcategory._id,
-                                        ])
-                                      : field.onChange(
-                                          field.value?.filter(
-                                            (v) => v !== subcategory._id
-                                          )
-                                        );
+                                    if (checked) {
+                                      field.onChange([
+                                        ...field.value,
+                                        subcategory._id,
+                                      ]);
+                                    } else {
+                                      field.onChange(
+                                        field.value?.filter(
+                                          (v) => v !== subcategory._id
+                                        )
+                                      );
+                                    }
                                   }}
                                   className="h-4 w-4 rounded-none"
                                 />

@@ -1,8 +1,8 @@
 import { Footer } from "@/components/user/footer";
 import Header from "@/components/user/header";
+import { UserStoreProvider } from "@/context/user-store";
 import type { Metadata } from "next";
 import { getUserProfile } from "./action";
-import { UserStoreProvider } from "@/context/user-store";
 
 export const metadata: Metadata = {
   title: "Trendly",

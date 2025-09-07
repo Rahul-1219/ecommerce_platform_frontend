@@ -9,7 +9,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK!);
+loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK!);
 
 interface OrderSummaryProps {
   subtotal: number;
