@@ -37,19 +37,20 @@ interface DataTableProps<TData, TValue> {
 }
 
 declare module "@tanstack/react-table" {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface TableMeta<TData> {
     updateData?: (rowIndex: number, updatedVariant: Variant) => void;
     deleteData?: (rowIndex: number) => void;
   }
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<_TData, TValue>({
   columns,
   data,
   meta,
   children,
   pageSize = 10,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<_TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState<string>("");
 
@@ -57,7 +58,7 @@ export function DataTable<TData, TValue>({
     data,
     columns,
     initialState: {
-      pagination: { pageSize: pageSize }, // Sets default to 10 rows per page
+      pagination: { pageSize: pageSize },
     },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),

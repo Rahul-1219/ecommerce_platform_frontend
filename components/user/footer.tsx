@@ -67,7 +67,7 @@ export function Footer() {
                   href="/filter?c=men"
                   className="hover:text-white transition"
                 >
-                  Men's Clothing
+                  Men&apos;s Clothing
                 </Link>
               </li>
               <li>
@@ -75,7 +75,7 @@ export function Footer() {
                   href="/filter?c=women"
                   className="hover:text-white transition"
                 >
-                  Women's Clothing
+                  Women&apos;s Clothing
                 </Link>
               </li>
               <li>
@@ -96,29 +96,29 @@ export function Footer() {
             </h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="/#" className="hover:text-white transition">
+                <Link href="/#" className="hover:text-white transition">
                   Contact Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/#" className="hover:text-white transition">
+                <Link href="/#" className="hover:text-white transition">
                   FAQs
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/#" className="hover:text-white transition">
+                <Link href="/#" className="hover:text-white transition">
                   Shipping Policy
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/#" className="hover:text-white transition">
+                <Link href="/#" className="hover:text-white transition">
                   Returns & Exchanges
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/#" className="hover:text-white transition">
+                <Link href="/#" className="hover:text-white transition">
                   Size Guide
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -130,15 +130,15 @@ export function Footer() {
             © {new Date().getFullYear()} MyStore. All rights reserved.
           </div>
           <div className="flex flex-wrap justify-center gap-4 text-sm">
-            <a href="/#" className="hover:text-white transition">
+            <Link href="/#" className="hover:text-white transition">
               Privacy Policy
-            </a>
-            <a href="/#" className="hover:text-white transition">
+            </Link>
+            <Link href="/#" className="hover:text-white transition">
               Terms of Service
-            </a>
-            <a href="/#" className="hover:text-white transition">
+            </Link>
+            <Link href="/#" className="hover:text-white transition">
               Cookie Policy
-            </a>
+            </Link>
           </div>
         </div>
       </div>

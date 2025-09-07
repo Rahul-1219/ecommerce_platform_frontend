@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import DashboardCard from "@/components/custom/dashboard-card";
 import DashboardCharts from "@/components/custom/dashboard-charts";
 import { getDashboardStats } from "../action";

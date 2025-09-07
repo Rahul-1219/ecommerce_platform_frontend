@@ -13,7 +13,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -32,14 +31,14 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CloudUpload, Paperclip } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { ButtonLoading } from "../custom/button-loading";
-import { Textarea } from "../ui/textarea";
 import { ImageScrollArea } from "../custom/image-scrollarea";
-import { useRouter } from "next/navigation";
 import { MultiSelect } from "../custom/multi-select";
+import { Textarea } from "../ui/textarea";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -119,16 +118,12 @@ export default function ProductForm({
       let response: any = { status: 1, message: "", data: {} };
       if (type === "add") {
         response = await addProduct(formData);
-        if (response?.status) {
-          const id: string = response?.data?._id;
-          const type: string = response?.data?.type;
-        }
       } else {
         response = await updateProduct(formData, id);
       }
       if (response.status) {
         form.setValue("images", []);
-        router.push('/admin/product');
+        router.push("/admin/product");
         toast({
           title: response.message,
           duration: 2000,

@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import Profile from "@/components/custom/profile";
 import { getUserOrders } from "../action";
 

@@ -1,8 +1,7 @@
-import { Metadata } from "next";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AdminSidebar } from "@/components/custom/admin-sidebar";
 import { BreadcrumbWithCustomSeparator } from "@/components/custom/breadcrumb";
 import { Separator } from "@/components/ui/separator";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
 
 export default async function DashboardLayout({

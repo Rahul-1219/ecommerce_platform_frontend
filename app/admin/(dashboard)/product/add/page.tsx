@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { getCategoryDropDownList, getTagList } from "@/app/admin/action";
 import ProductForm from "@/components/forms/product-form";
 

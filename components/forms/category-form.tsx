@@ -1,8 +1,12 @@
 import { Category } from "@/app/admin/(dashboard)/category/columns";
+import { addCategory, updateCategory } from "@/app/admin/action";
+import { useToast } from "@/hooks/use-toast";
 import { categorySchema, CategorySchema } from "@/schemas/admin";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Row } from "@tanstack/react-table";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { ButtonLoading } from "../custom/button-loading";
 import FileUploader from "../custom/file-uploader";
 import { Button } from "../ui/button";
 import {
@@ -14,10 +18,6 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { addCategory, updateCategory } from "@/app/admin/action";
-import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
-import { ButtonLoading } from "../custom/button-loading";
 
 interface CategoryFormProps {
   className?: string;
@@ -73,7 +73,7 @@ const CategoryForm = ({
         });
       }
     } else {
-      const id = row?.original?._id!;
+      const id = row?.original?._id as string;
       const response = await updateCategory(formData, id);
       if (response.status) {
         if (onClose) {

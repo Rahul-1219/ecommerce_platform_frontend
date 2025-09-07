@@ -111,7 +111,7 @@ export function VerifyCode({
           <DialogTitle>Verify Email</DialogTitle>
           <div className="text-center pt-2">
             <div className="flex flex-col items-center space-y-2">
-              <span>We've sent a 6-digit code to</span>
+              <span>We&apos;ve sent a 6-digit code to</span>
               <div className="flex items-center gap-2">
                 <span className="px-2 text-blue-700">{email}</span>
               </div>
@@ -139,7 +139,7 @@ export function VerifyCode({
                     </InputOTP>
                   </FormControl>
                   <FormDescription className="text-center">
-                    <span className="px-1">Didn't get code?</span>
+                    <span className="px-1">Didn&apos;t get code?</span>
                     <span
                       className="underline cursor-pointer text-blue-700 px-1"
                       onClick={onResentCode}

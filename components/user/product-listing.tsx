@@ -76,23 +76,6 @@ export default function ProductListing({
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  useEffect(() => {
-    const tags = searchParams.getAll("t"); // if you're using ?t=...&t=... for multiple tags
-    const category = searchParams.get("c");
-    const sub = searchParams.getAll("s"); // same for subcategories
-    const price = searchParams.get("price");
-
-    const urlFilters: FiltersState = {
-      tags,
-      category: category || "",
-      subcategories: sub,
-      price: price || "",
-    };
-
-    setFilters(urlFilters);
-    loadProducts(1, true, urlFilters);
-  }, [searchParams]);
-
   const loadProducts = useCallback(
     async (page: number, reset = false, reqFilters: any = null) => {
       setLoading(true);
@@ -121,6 +104,23 @@ export default function ProductListing({
     [filters, toast]
   );
 
+  useEffect(() => {
+    const tags = searchParams.getAll("t"); // if you're using ?t=...&t=... for multiple tags
+    const category = searchParams.get("c");
+    const sub = searchParams.getAll("s"); // same for subcategories
+    const price = searchParams.get("price");
+
+    const urlFilters: FiltersState = {
+      tags,
+      category: category || "",
+      subcategories: sub,
+      price: price || "",
+    };
+
+    setFilters(urlFilters);
+    loadProducts(1, true, urlFilters);
+  }, [searchParams, loadProducts]);
+
   const handleApplyFilters = useCallback(
     (newFilters: Partial<FiltersState>) => {
       setFilters((prev) => ({
@@ -132,13 +132,13 @@ export default function ProductListing({
       loadProducts(1, true, newFilters);
       setMobileFilterOpen(false);
     },
-    [loadProducts, toast]
+    [loadProducts, defaultFilters.category]
   );
 
   // Reset products when filters change (for initial load)
   useEffect(() => {
     loadProducts(1, true);
-  }, []); // Empty dependency array to run only once on mount
+  }, [loadProducts]); // Empty dependency array to run only once on mount
 
   // Infinite scroll for mobile
   useEffect(() => {

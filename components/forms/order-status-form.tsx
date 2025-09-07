@@ -19,11 +19,11 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Textarea } from "../ui/textarea";
-import { Loader2 } from "lucide-react";
 
 const orderStatusSchema = z.object({
   status: z.string().min(1, "Status is required"),
@@ -66,7 +66,7 @@ export function OrderStatusForm({
   const onSubmit = async (data: OrderStatusFormValues) => {
     setIsUpdating(true);
     try {
-      const res = await updateOrderStatus(orderId, data);
+      await updateOrderStatus(orderId, data);
       onClose();
     } catch (error: any) {
       toast({

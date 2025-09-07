@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import ProductListing from "@/components/user/product-listing";
 import { getFilterOptions, getFilterProducts } from "../action";
 

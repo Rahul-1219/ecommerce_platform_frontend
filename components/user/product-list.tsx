@@ -66,13 +66,9 @@ const ProductList: React.FC<ProductListProps> = ({
             <SwiperSlide key={product._id} className="!w-[180px] sm:!w-[200px]">
               <Link href={`/product/${product._id}`}>
                 <ProductCard
-                  id={product._id}
                   name={product.name}
                   description={product.description}
                   price={product.price}
-                  originalPrice={product.price}
-                  discount={10}
-                  category={product.category.name}
                   imageUrl={product.images[0].image}
                 />
               </Link>
@@ -86,13 +82,9 @@ const ProductList: React.FC<ProductListProps> = ({
         {products.map((product) => (
           <Link href={`/product/${product._id}`} key={product._id}>
             <ProductCard
-              id={product._id}
               name={product.name}
               description={product.description}
               price={product.price}
-              originalPrice={product.price}
-              discount={10}
-              category={product.category.name}
               imageUrl={product.images[0].image}
             />
           </Link>

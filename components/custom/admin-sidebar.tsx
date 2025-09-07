@@ -19,9 +19,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ModeToggle } from "./mode-toggle";
 import SidebarUser from "./sidebar-user";
-import { DialogTitle } from "../ui/dialog";
 
 // Menu items.
 const items = [
@@ -64,7 +62,6 @@ export function AdminSidebar({ userData }: { userData: any }) {
         <SidebarGroup>
           <div className="flex justify-between pb-2">
             <SidebarGroupLabel>Administration</SidebarGroupLabel>
-            {/* <ModeToggle /> */}
           </div>
           <SidebarGroupContent>
             <SidebarMenu>
