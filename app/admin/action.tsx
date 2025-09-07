@@ -6,7 +6,7 @@ import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-export const loginUser = async (request: LoginSchema) => {
+export const loginUser = async (request) => {
   const response = await fetch(process.env.NEXT_PUBLIC_BASE_URL + "api/login", {
     method: "POST", // HTTP method
     headers: {

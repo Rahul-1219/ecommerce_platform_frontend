@@ -37,7 +37,7 @@ const LoginForm: React.FC = () => {
   const onSubmit = async (data: LoginSchema) => {
     try {
       setShowLoaderBtn(true);
-      const response = await loginUser(data); // Assuming loginUser returns the response with a status
+      const response = await loginUser({ ...data, isAdmin: true }); // Assuming loginUser returns the response with a status
       if (response.status) {
         router.push("/admin"); // Navigate to the home page (or wherever needed)
       } else {
