@@ -3,11 +3,8 @@ import LoginForm from "@/components/forms/login-form";
 
 const Login = () => {
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen p-4">
       {/* ModeToggle in the top-right corner */}
-      <div className="absolute top-4 right-4">
-        <ModeToggle />
-      </div>
       <LoginForm />
     </div>
   );

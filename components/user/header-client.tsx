@@ -22,6 +22,7 @@ import { CircleUserRound, LogOut, Menu, User, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as React from "react";
+import Logo from "../icons/logo";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -56,11 +57,9 @@ export function HeaderClient({
     <header className="fixed top-0 left-0 w-full z-50 bg-customBlack text-[#fff] px-4 sm:px-6 md:px-8 lg:px-10 h-16 md:h-20">
       <div className="container flex h-full items-center justify-between">
         {/* Logo and Desktop Navigation */}
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-6">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 font-bold text-lg">
-            MyStore
-          </Link>
+          <Logo />
 
           {/* Desktop Navigation */}
           <NavigationMenu className="hidden md:block">
@@ -68,7 +67,7 @@ export function HeaderClient({
               {categories?.data?.map((category) => (
                 <NavigationMenuItem key={category._id} className="rounded-none">
                   <NavigationMenuTrigger
-                    className="uppercase font-bold text-[16px] text-white !bg-transparent 
+                    className="uppercase font-bold text-[14px] text-white !bg-transparent 
              hover:text-white hover:bg-transparent
              focus:text-white focus:bg-transparent
              active:text-white active:bg-transparent

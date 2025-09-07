@@ -27,12 +27,15 @@ export default function DashboardCharts({
     return (
       <Card className="shadow-lg rounded-lg w-full relative">
         <CardHeader>
-          <div className="flex justify-between items-center w-full">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full gap-2 md:gap-0">
+            {/* Title */}
             <div>
               <CardTitle className="text-lg font-semibold">Orders</CardTitle>
               <p className="text-gray-400 text-xs">Last 12 Months</p>
             </div>
-            <div className="flex space-x-2">
+
+            {/* Stats Boxes */}
+            <div className="flex flex-wrap gap-2 md:flex-row">
               <div className="flex items-center space-x-1 bg-blue-50 px-2 py-0.5 rounded-md shadow-sm text-xs">
                 <ShoppingCart className="w-3 h-3 text-blue-600" />
                 <span className="text-blue-800 font-medium">
@@ -79,12 +82,15 @@ export default function DashboardCharts({
     return (
       <Card className="shadow-lg rounded-lg w-full relative">
         <CardHeader>
-          <div className="flex justify-between items-center w-full">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full gap-2 md:gap-0">
+            {/* Title */}
             <div>
               <CardTitle className="text-lg font-semibold">Revenue</CardTitle>
               <p className="text-gray-400 text-xs">Last 12 Months</p>
             </div>
-            <div className="flex space-x-2">
+
+            {/* Stats Boxes */}
+            <div className="flex flex-wrap gap-2 md:flex-row">
               <div className="flex items-center space-x-1 bg-green-50 px-2 py-0.5 rounded-md shadow-sm text-xs">
                 <DollarSign className="w-3 h-3 text-green-600" />
                 <span className="text-green-800 font-medium">

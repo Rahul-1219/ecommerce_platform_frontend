@@ -130,11 +130,6 @@ export default function ProductListing({
       newFilters.category = defaultFilters.category;
       // Use setTimeout to ensure state is updated before loading products
       loadProducts(1, true, newFilters);
-
-      toast({
-        title: "Filters applied successfully",
-        duration: 2000,
-      });
       setMobileFilterOpen(false);
     },
     [loadProducts, toast]
